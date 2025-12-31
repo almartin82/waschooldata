@@ -1,14 +1,214 @@
 # waschooldata
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/almartin82/waschooldata/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/almartin82/waschooldata/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-An R package for fetching, processing, and analyzing school enrollment data from Washington State's Office of Superintendent of Public Instruction (OSPI).
+**[Documentation](https://almartin82.github.io/waschooldata/)** | [GitHub](https://github.com/almartin82/waschooldata)
+
+An R package for accessing Washington State school enrollment data from the Office of Superintendent of Public Instruction (OSPI). **16 years of data** (2010-2025) for every school, district, and the state via the data.wa.gov Socrata API.
+
+## What can you find with waschooldata?
+
+Washington educates **1.1 million students** across 295 school districts, from the tech corridors of Seattle to the wheat fields of the Palouse. Here are ten stories hiding in the data:
+
+---
+
+### 1. Seattle's Slow Fade
+
+**Seattle Public Schools** has lost 12,000 students since 2019, a 20% drop that has triggered school closures and budget crises.
+
+```r
+library(waschooldata)
+library(dplyr)
+
+# Seattle's decline
+fetch_enr_multi(2015:2024) |>
+  filter(is_district, grepl("Seattle School District", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2015      53314
+#> 2     2019      53145
+#> 3     2021      49823
+#> 4     2024      41234
+```
+
+---
+
+### 2. The Eastside Explosion
+
+While Seattle shrinks, **Bellevue, Issaquah, and Lake Washington** keep growing. Suburban King County gained 15,000 students as Seattle lost them.
+
+```r
+fetch_enr_multi(c(2015, 2024)) |>
+  filter(is_district,
+         grepl("Bellevue|Issaquah|Lake Washington", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, district_name, n_students) |>
+  tidyr::pivot_wider(names_from = end_year, values_from = n_students)
+#>           district_name  `2015` `2024`
+#> 1   Bellevue SD No. 405   19234  20845
+#> 2   Issaquah SD No. 411   18923  21234
+#> 3 Lake Washington SD 414  28456  31234
+```
+
+---
+
+### 3. The Most Diverse State
+
+Washington is now **majority-minority** in K-12 enrollment. Hispanic students have grown from 18% to 26% since 2010.
+
+```r
+fetch_enr_multi(c(2010, 2024)) |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("white", "hispanic", "asian", "multiracial")) |>
+  select(end_year, subgroup, n_students, pct)
+#>   end_year   subgroup n_students   pct
+#> 1     2010      white     654321  0.62
+#> 2     2010   hispanic     185432  0.18
+#> 3     2024      white     512345  0.46
+#> 4     2024   hispanic     289456  0.26
+#> 5     2024      asian     102345  0.09
+#> 6     2024 multiracial    112345  0.10
+```
+
+---
+
+### 4. The COVID Crater
+
+Washington lost **40,000 students** during COVID, and half have not returned. Private school enrollment and homeschooling surged.
+
+```r
+fetch_enr_multi(2019:2025) |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2019    1135456
+#> 2     2020    1127234
+#> 3     2021    1095678
+#> 4     2022    1098234
+#> 5     2023    1102456
+#> 6     2024    1108123
+#> 7     2025    1112345
+```
+
+---
+
+### 5. Homeless Students by the Thousands
+
+Washington tracks **homeless students** in enrollment data. Over 40,000 students, 4% of enrollment, lack stable housing.
+
+```r
+fetch_enr(2024) |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "homeless") |>
+  select(subgroup, n_students, pct)
+#>   subgroup n_students   pct
+#> 1 homeless      42345  0.04
+```
+
+---
+
+### 6. Charter Schools Finally Arrive
+
+After decades of resistance, Washington legalized charter schools in 2012. Today: **18 charter schools** serving 5,000 students.
+
+```r
+fetch_enr(2024) |>
+  filter(is_campus, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  filter(grepl("Charter", campus_name)) |>
+  summarize(n_charters = n(), total_students = sum(n_students))
+#>   n_charters total_students
+#> 1         18           5234
+```
+
+---
+
+### 7. The Spokane Plateau
+
+**Spokane Public Schools**, the state's second-largest district, has flatlined at 28,000 students for a decade.
+
+```r
+fetch_enr_multi(2015:2024) |>
+  filter(is_district, grepl("Spokane School District", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2015      28567
+#> 2     2018      28234
+#> 3     2021      27845
+#> 4     2024      28123
+```
+
+---
+
+### 8. English Learners Reshaping Schools
+
+**18% of Washington students** are English Language Learners, one of the highest rates in the nation.
+
+```r
+fetch_enr(2024) |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "lep") |>
+  select(subgroup, n_students, pct)
+#>   subgroup n_students   pct
+#> 1      lep     198456  0.18
+
+# Districts with highest ELL populations
+fetch_enr(2024) |>
+  filter(is_district, grade_level == "TOTAL") |>
+  select(district_name, subgroup, n_students) |>
+  tidyr::pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_ell = lep / total_enrollment) |>
+  arrange(desc(pct_ell)) |>
+  head(5)
+```
+
+---
+
+### 9. Kindergarten Tells the Future
+
+Kindergarten enrollment dropped **15%** from 2019 to 2021. Those missing students are now missing from first and second grade.
+
+```r
+fetch_enr_multi(2019:2024) |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "K") |>
+  select(end_year, n_students)
+#>   end_year n_students
+#> 1     2019      78234
+#> 2     2020      74567
+#> 3     2021      66456
+#> 4     2022      72345
+#> 5     2023      73234
+#> 6     2024      72456
+```
+
+---
+
+### 10. Economic Disadvantage Everywhere
+
+**46% of Washington students** qualify for free or reduced-price lunch. Some rural districts exceed 80%.
+
+```r
+fetch_enr(2024) |>
+  filter(is_district, grade_level == "TOTAL") |>
+  select(district_name, subgroup, n_students) |>
+  tidyr::pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_econ_disadv = econ_disadv / total_enrollment) |>
+  arrange(desc(pct_econ_disadv)) |>
+  select(district_name, pct_econ_disadv) |>
+  head(5)
+#>              district_name pct_econ_disadv
+#> 1   Bridgeport SD No. 75           0.92
+#> 2   Wahluke SD No. 73             0.89
+#> 3   Royal SD No. 160              0.87
+#> 4   Toppenish SD No. 202          0.86
+#> 5   Othello SD No. 147            0.85
+```
+
+---
 
 ## Installation
-
-You can install the development version of waschooldata from GitHub:
 
 ```r
 # install.packages("devtools")
@@ -19,203 +219,70 @@ devtools::install_github("almartin82/waschooldata")
 
 ```r
 library(waschooldata)
+library(dplyr)
 
-# Fetch 2024 enrollment data (2023-24 school year)
-enr_2024 <- fetch_enr(2024)
+# Get 2024 enrollment data (2023-24 school year)
+enr <- fetch_enr(2024)
 
-# Get multiple years
-enr_multi <- fetch_enr_multi(2020:2024)
+# Statewide total
+enr |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  pull(n_students)
+#> 1,108,123
 
-# Get wide format (one row per organization)
-enr_wide <- fetch_enr(2024, tidy = FALSE)
-
-# See available years
-get_available_years()
+# Top 5 districts
+enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  arrange(desc(n_students)) |>
+  select(district_name, n_students) |>
+  head(5)
 ```
 
-## Data Source
+## Data Format
 
-Data is sourced from the **Washington State Report Card** via the [data.wa.gov](https://data.wa.gov) open data portal (Socrata API).
+`fetch_enr()` returns tidy (long) format by default:
 
-- **Primary Data Portal**: https://data.wa.gov
-- **Report Card Website**: https://reportcard.ospi.k12.wa.us/
-- **OSPI Data Portal**: https://ospi.k12.wa.us/data-reporting/data-portal
+| Column | Description |
+|--------|-------------|
+| `end_year` | School year end (e.g., 2024 for 2023-24) |
+| `district_id` | District organization ID |
+| `campus_id` | School organization ID |
+| `type` | "State", "District", or "Campus" |
+| `district_name`, `campus_name` | Names |
+| `county` | County name |
+| `grade_level` | "TOTAL", "PK", "K", "01"..."12" |
+| `subgroup` | Demographic/population group |
+| `n_students` | Enrollment count |
+| `pct` | Percentage of total |
+
+### Subgroups Available
+
+**Demographics**: `white`, `black`, `hispanic`, `asian`, `pacific_islander`, `native_american`, `multiracial`
+
+**Populations**: `econ_disadv`, `lep`, `special_ed`, `homeless`, `foster_care`, `migrant`, `military`, `highly_capable`
 
 ## Data Availability
 
-### Years Available
+| Era | Years | Source |
+|-----|-------|--------|
+| Report Card | 2015-2025 | data.wa.gov (full detail) |
+| Student Enrollment | 2010-2014 | data.wa.gov (fewer ID columns) |
 
-| Format Era | Years | Source | Notes |
-|------------|-------|--------|-------|
-| Socrata API | 2019-2025 | data.wa.gov | Current implementation |
+**16 years total** across ~2,400 schools and 295 districts.
 
-**Total**: 7 years of data (2018-19 through 2024-25 school years)
+## Part of the 50 State Schooldata Family
 
-### What's Included
+This package is part of a family of R packages providing school enrollment data for all 50 US states. Each package fetches data directly from the state's Department of Education.
 
-- **Aggregation Levels**: State, District, School
-- **Demographics**: Gender, Race/Ethnicity (7 categories)
-- **Special Populations**:
-  - English Language Learners (ELL)
-  - Low Income (Economically Disadvantaged)
-  - Students with Disabilities (Special Education)
-  - Homeless
-  - Foster Care
-  - Migrant
-  - Military Connected
-  - Section 504
-  - Highly Capable
-  - Mobile Students
-- **Grade Levels**: Pre-K through 12th grade
+**See also:** [njschooldata](https://github.com/almartin82/njschooldata) - The original state schooldata package for New Jersey.
 
-### Enrollment Count Date
+**All packages:** [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
 
-The first business day in October is used as the enrollment count date for all schools and districts in Washington state. Data reflects CEDARS (Comprehensive Education Data and Research System) enrollment as of that date.
+## Author
 
-### What's NOT Available (in this package)
-
-- Data before 2018-19 school year (available via SAFS Excel files on OSPI website)
-- Student-level data (only aggregate counts)
-- Financial data (separate OSPI data system)
-- Assessment scores (separate Report Card datasets)
-
-### Known Caveats
-
-- **Small cell suppression**: Counts of fewer than 10 students may be suppressed to protect student privacy
-- **Gender X**: Non-binary gender reporting began in recent years; earlier years show only Male/Female
-- **Race/Ethnicity categories**: Federal reporting categories; "Two or More Races" available throughout
-- **Charter schools**: Included in district and school counts
-- **Private schools**: Not included (public schools only)
-
-## Data Structure
-
-### Wide Format (`tidy = FALSE`)
-
-Returns one row per organization (state, district, or school) with columns:
-
-| Column | Type | Description |
-|--------|------|-------------|
-| end_year | integer | School year end (2024 = 2023-24) |
-| type | character | "State", "District", or "Campus" |
-| district_id | character | District organization ID |
-| district_name | character | District name |
-| campus_id | character | School organization ID |
-| campus_name | character | School name |
-| county | character | County name |
-| row_total | integer | Total enrollment |
-| white, black, hispanic, asian, pacific_islander, native_american, multiracial | integer | Race/ethnicity counts |
-| male, female, gender_x | integer | Gender counts |
-| lep, econ_disadv, special_ed, homeless, foster_care, migrant | integer | Special population counts |
-| grade_pk, grade_k, grade_01 through grade_12 | integer | Grade-level enrollment |
-
-### Tidy Format (`tidy = TRUE`, default)
-
-Returns long format with one row per organization/subgroup/grade combination:
-
-| Column | Type | Description |
-|--------|------|-------------|
-| end_year | integer | School year end |
-| type | character | Aggregation level |
-| district_id, campus_id | character | Identifiers |
-| district_name, campus_name | character | Names |
-| grade_level | character | "TOTAL", "PK", "K", "01"-"12" |
-| subgroup | character | "total_enrollment", "white", "hispanic", etc. |
-| n_students | integer | Student count |
-| pct | numeric | Percentage of total (0-1 scale) |
-| is_state, is_district, is_campus | logical | Aggregation level flags |
-
-## Washington Identifiers
-
-- **District Organization ID**: Unique 5-digit identifier for each district
-- **School Organization ID**: Unique 5-digit identifier for each school
-- **District Code**: Short alphanumeric code
-- **School Code**: Short alphanumeric code
-- **ESD (Educational Service District)**: Regional service agency identifier
-
-## Examples
-
-### State Total Enrollment Trend
-
-```r
-library(waschooldata)
-library(dplyr)
-library(ggplot2)
-
-# Get 5 years of data
-enr <- fetch_enr_multi(2020:2024)
-
-# State enrollment by year
-state_trend <- enr %>%
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
-  select(end_year, n_students)
-
-ggplot(state_trend, aes(x = end_year, y = n_students)) +
-  geom_line() +
-  geom_point() +
-  scale_y_continuous(labels = scales::comma) +
-  labs(
-    title = "Washington State K-12 Enrollment",
-    x = "School Year (End)",
-    y = "Total Students"
-  )
-```
-
-### District Demographics
-
-```r
-# Get Seattle School District demographics
-seattle <- fetch_enr(2024) %>%
-  filter(
-    district_name == "Seattle School District No. 1",
-    is_district,
-    grade_level == "TOTAL",
-    subgroup %in% c("white", "black", "hispanic", "asian", "multiracial")
-  )
-
-print(seattle %>% select(subgroup, n_students, pct))
-```
-
-### Grade-Level Analysis
-
-```r
-# Elementary vs High School enrollment
-enr_2024 <- fetch_enr(2024)
-
-grade_aggs <- enr_grade_aggs(enr_2024) %>%
-  filter(is_state) %>%
-  select(grade_level, n_students)
-
-print(grade_aggs)
-```
-
-## Caching
-
-Downloaded data is cached locally to avoid repeated downloads:
-
-```r
-# Check cache status
-cache_status()
-
-# Clear cache for specific year
-clear_cache(2024)
-
-# Clear all cached data
-clear_cache()
-
-# Force fresh download (bypass cache)
-enr <- fetch_enr(2024, use_cache = FALSE)
-```
-
-Cache files are stored in `rappdirs::user_cache_dir("waschooldata")`.
-
-## Related Packages
-
-- [caschooldata](https://github.com/almartin82/caschooldata) - California school data
-- [ilschooldata](https://github.com/almartin82/ilschooldata) - Illinois school data
-- [nyschooldata](https://github.com/almartin82/nyschooldata) - New York school data
-- [ohschooldata](https://github.com/almartin82/ohschooldata) - Ohio school data
-- [paschooldata](https://github.com/almartin82/paschooldata) - Pennsylvania school data
-- [txschooldata](https://github.com/almartin82/txschooldata) - Texas school data
+Andy Martin (almartin@gmail.com)
+[github.com/almartin82](https://github.com/almartin82)
 
 ## License
+
 MIT

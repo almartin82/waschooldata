@@ -100,6 +100,13 @@ format_school_year <- function(end_year) {
 #' Returns a vector of end years for which enrollment data is available
 #' from the Washington State Report Card data portal.
 #'
+#' Data Eras:
+#' - Era 1 (2010-2025): Modern schema via data.wa.gov Socrata API
+#'   - 2010-2014: "Student Enrollment" datasets (same schema)
+#'   - 2015-2025: "Report Card Enrollment" datasets
+#' - Era 2 (1994-2001): Legacy schema with different column structure
+#'   (not currently supported - requires separate processing)
+#'
 #' @return Integer vector of available end years
 #' @export
 #' @examples
@@ -109,37 +116,62 @@ format_school_year <- function(end_year) {
 #' }
 get_available_years <- function() {
 
-  # Washington State Report Card enrollment data is available on data.wa.gov
-  # Confirmed dataset IDs are available for 2019-2025
-  # Earlier years (2015-2018) may be available but dataset IDs need confirmation
+  # Washington State enrollment data is available on data.wa.gov
+  # Modern schema datasets: 2010-2025 (Student Enrollment + Report Card Enrollment)
+  # Legacy datasets exist for 1994-2001 but have different schema
   # See get_dataset_id() for the specific IDs
-  2019:2025
+  2010:2025
 }
 
 
 #' Get dataset ID for a given school year
 #'
-#' Returns the Socrata dataset ID for the Report Card Enrollment data
+#' Returns the Socrata dataset ID for the enrollment data
 #' for a given school year end.
+#'
+#' Data sources by era:
+#' - 2015-2025: "Report Card Enrollment" datasets
+#' - 2010-2014: "Student Enrollment" datasets (same schema)
 #'
 #' @param end_year School year end (e.g., 2024 for 2023-24 school year)
 #' @return Character string with dataset ID, or NULL if not available
 #' @keywords internal
 get_dataset_id <- function(end_year) {
-  # Dataset IDs from data.wa.gov for Report Card Enrollment
+  # Dataset IDs from data.wa.gov for enrollment data
   # These are the 4-4 alphanumeric codes in the URLs
-  # Verified from: https://data.wa.gov/browse?category=Education&q=report+card+enrollment
-  dataset_ids <- list(
+  # Verified from: https://data.wa.gov/browse?category=Education
+
+  # Report Card Enrollment datasets (2015-2025)
+  # URL pattern: https://data.wa.gov/education/Report-Card-Enrollment-YYYY-YY-School-Year/{id}
+  report_card_ids <- list(
     "2025" = "2rwv-gs2e",
     "2024" = "q4ba-s3jc",
     "2023" = "dij7-mbxg",
     "2022" = "ymi4-syjv",
     "2021" = "nvpc-yr7b",
     "2020" = "gtd3-scga",
-    "2019" = "u4gd-6wxx"
+    "2019" = "u4gd-6wxx",
+    "2018" = "fs63-sd8y",
+    "2017" = "y85c-tmgt",
+    "2016" = "ajpq-2bg9",
+    "2015" = "i9gq-g35m"
   )
 
-  id <- dataset_ids[[as.character(end_year)]]
+  # Student Enrollment datasets (2010-2014) - same schema as Report Card
+  # URL pattern: https://data.wa.gov/education/Student-Enrollment-YYYY-YY-School-Year/{id}
+  student_enrollment_ids <- list(
+    "2014" = "esyr-g8p5",
+    "2013" = "9949-vk3e",
+    "2012" = "5bjv-pebn",
+    "2011" = "93ce-b95t",
+    "2010" = "mpef-t92p"
+  )
+
+  # Try Report Card datasets first, then Student Enrollment
+  id <- report_card_ids[[as.character(end_year)]]
+  if (is.null(id)) {
+    id <- student_enrollment_ids[[as.character(end_year)]]
+  }
 
   if (is.null(id)) {
     return(NULL)

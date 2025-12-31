@@ -5,9 +5,9 @@ Authors@R:
     person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
 Description: Downloads and processes school data from the Washington Office of
     Superintendent of Public Instruction (OSPI). Provides functions for fetching
-    enrollment data from the Washington State Report Card and CEDARS (Comprehensive
-    Education Data and Research System) and transforming it into tidy format for
-    analysis.
+    enrollment data from the Washington State Report Card via the data.wa.gov
+    Socrata API, covering 16 years of historical data (2009-10 through 2024-25
+    school years). Transforms data into tidy format for analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

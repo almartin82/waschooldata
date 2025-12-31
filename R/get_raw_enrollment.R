@@ -5,12 +5,16 @@
 # This file contains functions for downloading raw enrollment data from OSPI.
 # Data comes from the Washington State Report Card via data.wa.gov Socrata API.
 #
-# Data source: https://data.wa.gov (search "Report Card Enrollment")
+# Data source: https://data.wa.gov (search "Report Card Enrollment" or "Student Enrollment")
 # API documentation: https://dev.socrata.com/
 #
 # Format Eras:
-# - Era 1 (2019-present): data.wa.gov Socrata API with consistent column names
-# - Era 2 (2015-2018): data.wa.gov with slightly different column names
+# - Era 1 (2010-2025): data.wa.gov Socrata API with consistent column names
+#   - 2015-2025: "Report Card Enrollment" datasets
+#   - 2010-2014: "Student Enrollment" datasets (same schema)
+# - Era 2 (1994-2001): Legacy format with different schema (not currently supported)
+#   - Separate District/County/State enrollment datasets
+#   - Different column names (af/am/bf/bm/etc. for race/gender)
 #
 # ==============================================================================
 

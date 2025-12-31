@@ -19,7 +19,9 @@
 #'
 #' @section Data Availability:
 #' \itemize{
-#'   \item Years: 2015 to present (approximately 10 years)
+#'   \item Years: 2010 to present (16 years of data)
+#'   \item 2015-present: Report Card Enrollment datasets (full detail)
+#'   \item 2010-2014: Student Enrollment datasets (same schema, fewer ID columns)
 #'   \item Aggregation levels: State, District, School
 #'   \item Update frequency: Annual (October enrollment count)
 #' }

@@ -49,12 +49,13 @@ test_that("get_available_years returns valid range", {
 
   expect_true(is.numeric(years))
   expect_true(length(years) > 0)
-  expect_true(min(years) >= 2019)
+  expect_true(min(years) >= 2010)  # Earliest available year
+
   expect_true(max(years) <= 2026)  # Reasonable upper bound
 })
 
 test_that("get_dataset_id returns IDs for known years", {
-  # Known dataset IDs
+  # Report Card Enrollment dataset IDs (2015-2025)
   expect_equal(get_dataset_id(2025), "2rwv-gs2e")
   expect_equal(get_dataset_id(2024), "q4ba-s3jc")
   expect_equal(get_dataset_id(2023), "dij7-mbxg")
@@ -62,6 +63,17 @@ test_that("get_dataset_id returns IDs for known years", {
   expect_equal(get_dataset_id(2021), "nvpc-yr7b")
   expect_equal(get_dataset_id(2020), "gtd3-scga")
   expect_equal(get_dataset_id(2019), "u4gd-6wxx")
+  expect_equal(get_dataset_id(2018), "fs63-sd8y")
+  expect_equal(get_dataset_id(2017), "y85c-tmgt")
+  expect_equal(get_dataset_id(2016), "ajpq-2bg9")
+  expect_equal(get_dataset_id(2015), "i9gq-g35m")
+
+  # Student Enrollment dataset IDs (2010-2014)
+  expect_equal(get_dataset_id(2014), "esyr-g8p5")
+  expect_equal(get_dataset_id(2013), "9949-vk3e")
+  expect_equal(get_dataset_id(2012), "5bjv-pebn")
+  expect_equal(get_dataset_id(2011), "93ce-b95t")
+  expect_equal(get_dataset_id(2010), "mpef-t92p")
 
   # Unknown year returns NULL
   expect_null(get_dataset_id(1999))
@@ -69,10 +81,10 @@ test_that("get_dataset_id returns IDs for known years", {
 })
 
 test_that("fetch_enr validates year parameter", {
-  expect_error(fetch_enr(2010), "end_year must be between")
-  expect_error(fetch_enr(2018), "end_year must be between")  # Before available range
-  expect_error(fetch_enr(2030), "end_year must be between")
-  expect_error(fetch_enr(1990), "end_year must be between")
+  # Years outside the available range should error
+  expect_error(fetch_enr(2009), "end_year must be between")  # Before 2010
+  expect_error(fetch_enr(2030), "end_year must be between")  # After 2025
+  expect_error(fetch_enr(1990), "end_year must be between")  # Way before available range
 })
 
 test_that("get_cache_dir returns valid path", {
@@ -225,4 +237,45 @@ test_that("state totals are reasonable", {
   # Should be between 900K and 1.5M
   expect_true(state_total > 900000)
   expect_true(state_total < 1500000)
+})
+
+test_that("historical data (2010-2014) downloads and processes", {
+  skip_on_cran()
+  skip_if_offline()
+
+  # Test a year from the Student Enrollment era
+  result <- fetch_enr(2012, tidy = FALSE, use_cache = FALSE)
+
+  # Check basic structure
+  expect_true(is.data.frame(result))
+  expect_true("row_total" %in% names(result))
+  expect_true("type" %in% names(result))
+
+  # 2010-2014 data has fewer columns than 2015+
+  # These columns are NOT expected in 2010-2014 data:
+  # district_id, district_code, campus_id, school_code, highly_capable
+  # But we should still have the core enrollment data
+  expect_true("white" %in% names(result) || "row_total" %in% names(result))
+
+  # Check we have all levels
+  expect_true("State" %in% result$type)
+  expect_true("District" %in% result$type)
+})
+
+test_that("fetch_enr_multi spans both data eras", {
+  skip_on_cran()
+  skip_if_offline()
+
+  # Fetch from both Student Enrollment (2014) and Report Card (2015) eras
+  result <- fetch_enr_multi(c(2014, 2015), tidy = TRUE, use_cache = TRUE)
+
+  # Check we have both years
+  years <- unique(result$end_year)
+  expect_true(2014 %in% years)
+  expect_true(2015 %in% years)
+
+  # Both years should have basic subgroups
+  subgroups <- unique(result$subgroup)
+  expect_true("total_enrollment" %in% subgroups)
+  expect_true("white" %in% subgroups)
 })
