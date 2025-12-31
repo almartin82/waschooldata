@@ -1,0 +1,54 @@
+url: https://almartin82.github.io/waschooldata/
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+navbar:
+  structure:
+    left:  [intro, reference, articles]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/almartin82/waschooldata
+      aria-label: GitHub
+
+reference:
+- title: "Fetch Data"
+  desc: "Functions for downloading enrollment data from OSPI"
+  contents:
+  - fetch_enr
+  - fetch_enr_multi
+  - get_available_years
+
+- title: "Transform Data"
+  desc: "Functions for transforming enrollment data"
+  contents:
+  - tidy_enr
+  - id_enr_aggs
+  - enr_grade_aggs
+
+- title: "Caching"
+  desc: "Functions for managing cached data"
+  contents:
+  - cache_status
+  - clear_cache
+
+- title: "Package"
+  desc: "Package documentation"
+  contents:
+  - waschooldata-package
+
+home:
+  links:
+  - text: Washington State Report Card
+    href: https://reportcard.ospi.k12.wa.us/
+  - text: OSPI Data Portal
+    href: https://ospi.k12.wa.us/data-reporting/data-portal
+  - text: data.wa.gov
+    href: https://data.wa.gov
+
+authors:
+  Al Martin:
+    href: https://github.com/almartin82

@@ -1,0 +1,15 @@
+# R package ignores
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Documentation
+docs/
+doc/
+Meta/
+
+# Build artifacts
+*.tar.gz
+*.zip

@@ -1,0 +1,36 @@
+Package: waschooldata
+Title: Fetch and Process Washington State School Data
+Version: 0.1.0
+Authors@R:
+    person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
+Description: Downloads and processes school data from the Washington Office of
+    Superintendent of Public Instruction (OSPI). Provides functions for fetching
+    enrollment data from the Washington State Report Card and CEDARS (Comprehensive
+    Education Data and Research System) and transforming it into tidy format for
+    analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.0)
+Imports:
+    dplyr,
+    readr,
+    purrr,
+    stringr,
+    tidyr,
+    rlang,
+    httr,
+    jsonlite,
+    rappdirs
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2,
+    scales
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://almartin82.github.io/waschooldata/, https://github.com/almartin82/waschooldata
+BugReports: https://github.com/almartin82/waschooldata/issues
