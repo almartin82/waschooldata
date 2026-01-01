@@ -88,7 +88,26 @@ million before pandemic disruption.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>change <span class="op">=</span> <span class="va">n_students</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span>,</span>
 <span>         pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">change</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">state_totals</span></span></code></pre></div>
+<span><span class="va">state_totals</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 4</span></span></span>
+<span><span class="co">#&gt;    end_year n_students   change pct_change</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     <span style="text-decoration: underline;">2</span>010    2<span style="text-decoration: underline;">069</span>870       <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     <span style="text-decoration: underline;">2</span>011    2<span style="text-decoration: underline;">090</span>666    <span style="text-decoration: underline;">20</span>796       1   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     <span style="text-decoration: underline;">2</span>012    2<span style="text-decoration: underline;">102</span>808    <span style="text-decoration: underline;">12</span>142       0.58</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     <span style="text-decoration: underline;">2</span>013    2<span style="text-decoration: underline;">117</span>360    <span style="text-decoration: underline;">14</span>552       0.69</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     <span style="text-decoration: underline;">2</span>014    2<span style="text-decoration: underline;">136</span>468    <span style="text-decoration: underline;">19</span>108       0.9 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     <span style="text-decoration: underline;">2</span>015    1<span style="text-decoration: underline;">086</span>314 -<span style="color: #BB0000;">1</span><span style="color: #BB0000; text-decoration: underline;">050</span><span style="color: #BB0000;">154</span>     -<span style="color: #BB0000;">49.2</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     <span style="text-decoration: underline;">2</span>016    1<span style="text-decoration: underline;">100</span>849    <span style="text-decoration: underline;">14</span>535       1.34</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     <span style="text-decoration: underline;">2</span>017    1<span style="text-decoration: underline;">115</span>820    <span style="text-decoration: underline;">14</span>971       1.36</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     <span style="text-decoration: underline;">2</span>018    1<span style="text-decoration: underline;">130</span>714    <span style="text-decoration: underline;">14</span>894       1.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     <span style="text-decoration: underline;">2</span>019    1<span style="text-decoration: underline;">137</span>367     <span style="text-decoration: underline;">6</span>653       0.59</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>     <span style="text-decoration: underline;">2</span>020    1<span style="text-decoration: underline;">146</span>882     <span style="text-decoration: underline;">9</span>515       0.84</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>     <span style="text-decoration: underline;">2</span>021    1<span style="text-decoration: underline;">093</span>331   -<span style="color: #BB0000; text-decoration: underline;">53</span><span style="color: #BB0000;">551</span>      -<span style="color: #BB0000;">4.67</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>     <span style="text-decoration: underline;">2</span>022    1<span style="text-decoration: underline;">091</span>343    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">988</span>      -<span style="color: #BB0000;">0.18</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>     <span style="text-decoration: underline;">2</span>023    1<span style="text-decoration: underline;">096</span>695     <span style="text-decoration: underline;">5</span>352       0.49</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>     <span style="text-decoration: underline;">2</span>024    1<span style="text-decoration: underline;">100</span>059     <span style="text-decoration: underline;">3</span>364       0.31</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>     <span style="text-decoration: underline;">2</span>025    1<span style="text-decoration: underline;">105</span>384     <span style="text-decoration: underline;">5</span>325       0.48</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">state_totals</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">end_year</span>, y <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.2</span>, color <span class="op">=</span> <span class="st">"#4B2E83"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -103,6 +122,7 @@ million before pandemic disruption.</p>
 <span>    x <span class="op">=</span> <span class="st">"School Year (ending)"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Total Enrollment"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="enrollment_hooks_files/figure-html/statewide-chart-1.png" class="r-plt" alt="" width="768"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -118,7 +138,26 @@ tech industry growth transformed the region.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_of_peak <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">seattle</span></span></code></pre></div>
+<span><span class="va">seattle</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 4</span></span></span>
+<span><span class="co">#&gt;    end_year district_name                 n_students pct_of_peak</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     <span style="text-decoration: underline;">2</span>010 Seattle School District No. 1      <span style="text-decoration: underline;">94</span>116        90.2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     <span style="text-decoration: underline;">2</span>011 Seattle School District No. 1      <span style="text-decoration: underline;">96</span>598        92.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     <span style="text-decoration: underline;">2</span>012 Seattle School District No. 1      <span style="text-decoration: underline;">99</span>702        95.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     <span style="text-decoration: underline;">2</span>013 Seattle School District No. 1     <span style="text-decoration: underline;">102</span>402        98.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     <span style="text-decoration: underline;">2</span>014 Seattle School District No. 1     <span style="text-decoration: underline;">104</span>362       100  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     <span style="text-decoration: underline;">2</span>015 Seattle School District No. 1      <span style="text-decoration: underline;">53</span>361        51.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     <span style="text-decoration: underline;">2</span>016 Seattle School District No. 1      <span style="text-decoration: underline;">53</span>767        51.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     <span style="text-decoration: underline;">2</span>017 Seattle School District No. 1      <span style="text-decoration: underline;">54</span>722        52.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     <span style="text-decoration: underline;">2</span>018 Seattle School District No. 1      <span style="text-decoration: underline;">55</span>321        53  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     <span style="text-decoration: underline;">2</span>019 Seattle School District No. 1      <span style="text-decoration: underline;">55</span>325        53  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>     <span style="text-decoration: underline;">2</span>020 Seattle School District No. 1      <span style="text-decoration: underline;">56</span>051        53.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>     <span style="text-decoration: underline;">2</span>021 Seattle School District No. 1      <span style="text-decoration: underline;">54</span>021        51.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>     <span style="text-decoration: underline;">2</span>022 Seattle School District No. 1      <span style="text-decoration: underline;">51</span>653        49.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>     <span style="text-decoration: underline;">2</span>023 Seattle School District No. 1      <span style="text-decoration: underline;">51</span>528        49.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>     <span style="text-decoration: underline;">2</span>024 Seattle School District No. 1      <span style="text-decoration: underline;">50</span>968        48.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>     <span style="text-decoration: underline;">2</span>025 Seattle School District No. 1      <span style="text-decoration: underline;">51</span>200        49.1</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_districts</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
@@ -143,6 +182,7 @@ tech industry growth transformed the region.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="enrollment_hooks_files/figure-html/top-districts-chart-1.png" class="r-plt" alt="" width="768"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -159,7 +199,17 @@ growing Hispanic population.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">demographics</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 9</span></span></span>
+<span><span class="co">#&gt;   subgroup    n_students_2010 n_students_2015 n_students_2020 n_students_2025</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> white               1<span style="text-decoration: underline;">314</span>286          <span style="text-decoration: underline;">615</span>697          <span style="text-decoration: underline;">601</span>749          <span style="text-decoration: underline;">526</span>102</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> black                <span style="text-decoration: underline;">113</span>030           <span style="text-decoration: underline;">48</span>578           <span style="text-decoration: underline;">50</span>251           <span style="text-decoration: underline;">53</span>176</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> hispanic             <span style="text-decoration: underline;">334</span>852          <span style="text-decoration: underline;">235</span>730          <span style="text-decoration: underline;">273</span>842          <span style="text-decoration: underline;">294</span>985</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> asian                <span style="text-decoration: underline;">160</span>750           <span style="text-decoration: underline;">77</span>981           <span style="text-decoration: underline;">91</span>377          <span style="text-decoration: underline;">100</span>676</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> multiracial           <span style="text-decoration: underline;">71</span>734           <span style="text-decoration: underline;">81</span>757          <span style="text-decoration: underline;">101</span>807          <span style="text-decoration: underline;">101</span>068</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: pct_2010 &lt;dbl&gt;, pct_2015 &lt;dbl&gt;, pct_2020 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   pct_2025 &lt;dbl&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
@@ -178,6 +228,7 @@ growing Hispanic population.</p>
 <span>    color <span class="op">=</span> <span class="st">"Race/Ethnicity"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="enrollment_hooks_files/figure-html/demographics-chart-1.png" class="r-plt" alt="" width="768"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -198,7 +249,21 @@ districts face different challenges.</p>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">students</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">esd_enrollment</span></span></code></pre></div>
+<span><span class="va">esd_enrollment</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 3</span></span></span>
+<span><span class="co">#&gt;    esd_name                                       districts students</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Puget Sound Educational Service District 121          35   <span style="text-decoration: underline;">427</span>222</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Northwest Educational Service District 189            35   <span style="text-decoration: underline;">166</span>971</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Educational Service District 112                      30    <span style="text-decoration: underline;">97</span>301</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Educational Service District 101                      59    <span style="text-decoration: underline;">94</span>984</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Educational Service District 123                      22    <span style="text-decoration: underline;">77</span>778</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Capital Region ESD 113                                44    <span style="text-decoration: underline;">75</span>121</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Educational Service District 105                      25    <span style="text-decoration: underline;">65</span>229</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> North Central Educational Service District 171        29    <span style="text-decoration: underline;">48</span>048</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Olympic Educational Service District 114              15    <span style="text-decoration: underline;">46</span>477</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Washington State Charter School Commission            15     <span style="text-decoration: underline;">4</span>600</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Spokane Public Schools Charter Authorizer              2      268</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">esd_enrollment</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>region <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -223,6 +288,7 @@ districts face different challenges.</p>
 <span>    x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Total Students"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="enrollment_hooks_files/figure-html/regional-chart-1.png" class="r-plt" alt="" width="768"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -244,11 +310,24 @@ growth even as Seattle itself declines.</p>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct_change</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">growth_rates</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">growth_rates</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
+<span><span class="co">#&gt;    district_id district_name                   yr_2015 yr_2025 change pct_change</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 100259      Sumner-Bonney Lake School Dist…    <span style="text-decoration: underline;">8</span>988   <span style="text-decoration: underline;">11</span>048   <span style="text-decoration: underline;">2</span>060       22.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 100126      Lake Stevens School District       <span style="text-decoration: underline;">8</span>515   <span style="text-decoration: underline;">10</span>215   <span style="text-decoration: underline;">1</span>700       20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 100016      Auburn School District            <span style="text-decoration: underline;">15</span>722   <span style="text-decoration: underline;">18</span>234   <span style="text-decoration: underline;">2</span>512       16  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 100183      Omak School District               <span style="text-decoration: underline;">5</span>257    <span style="text-decoration: underline;">6</span>071    814       15.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 100022      Bethel School District            <span style="text-decoration: underline;">18</span>678   <span style="text-decoration: underline;">21</span>538   <span style="text-decoration: underline;">2</span>860       15.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 100263      Tahoma School District             <span style="text-decoration: underline;">8</span>118    <span style="text-decoration: underline;">9</span>286   <span style="text-decoration: underline;">1</span>168       14.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 100127      Lake Washington School District   <span style="text-decoration: underline;">27</span>293   <span style="text-decoration: underline;">31</span>146   <span style="text-decoration: underline;">3</span>853       14.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 100218      Richland School District          <span style="text-decoration: underline;">12</span>729   <span style="text-decoration: underline;">14</span>499   <span style="text-decoration: underline;">1</span>770       13.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 100039      Central Valley School District    <span style="text-decoration: underline;">13</span>396   <span style="text-decoration: underline;">15</span>102   <span style="text-decoration: underline;">1</span>706       12.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 100195      Pasco School District             <span style="text-decoration: underline;">17</span>182   <span style="text-decoration: underline;">19</span>001   <span style="text-decoration: underline;">1</span>819       10.6</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">growth_rates</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>district_name <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu">fct_reorder</span><span class="op">(</span><span class="va">district_name</span>, <span class="va">pct_change</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>district_name <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html" class="external-link">fct_reorder</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">pct_change</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pct_change</span>, y <span class="op">=</span> <span class="va">district_name</span>, fill <span class="op">=</span> <span class="va">pct_change</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">pct_change</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="st">"+"</span>, <span class="st">""</span><span class="op">)</span>, <span class="va">pct_change</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -261,6 +340,7 @@ growth even as Seattle itself declines.</p>
 <span>    x <span class="op">=</span> <span class="st">"Percent Change"</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="enrollment_hooks_files/figure-html/growth-chart-1.png" class="r-plt" alt="" width="768"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -274,7 +354,26 @@ recovered, signaling smaller cohorts ahead.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_of_peak <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">k_trend</span></span></code></pre></div>
+<span><span class="va">k_trend</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 3</span></span></span>
+<span><span class="co">#&gt;    end_year n_students pct_of_peak</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     <span style="text-decoration: underline;">2</span>010      <span style="text-decoration: underline;">21</span>346        25.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     <span style="text-decoration: underline;">2</span>011      <span style="text-decoration: underline;">19</span>415        23.5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     <span style="text-decoration: underline;">2</span>012      <span style="text-decoration: underline;">19</span>799        24  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     <span style="text-decoration: underline;">2</span>013      <span style="text-decoration: underline;">32</span>700        39.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     <span style="text-decoration: underline;">2</span>014      <span style="text-decoration: underline;">44</span>526        53.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     <span style="text-decoration: underline;">2</span>015      <span style="text-decoration: underline;">52</span>825        64  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     <span style="text-decoration: underline;">2</span>016      <span style="text-decoration: underline;">70</span>465        85.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     <span style="text-decoration: underline;">2</span>017      <span style="text-decoration: underline;">78</span>060        94.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     <span style="text-decoration: underline;">2</span>018      <span style="text-decoration: underline;">80</span>923        98  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     <span style="text-decoration: underline;">2</span>019      <span style="text-decoration: underline;">81</span>696        99  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>     <span style="text-decoration: underline;">2</span>020      <span style="text-decoration: underline;">82</span>535       100  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>     <span style="text-decoration: underline;">2</span>021      <span style="text-decoration: underline;">69</span>857        84.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>     <span style="text-decoration: underline;">2</span>022      <span style="text-decoration: underline;">78</span>151        94.7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>     <span style="text-decoration: underline;">2</span>023      <span style="text-decoration: underline;">76</span>987        93.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>     <span style="text-decoration: underline;">2</span>024      <span style="text-decoration: underline;">76</span>023        92.1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>     <span style="text-decoration: underline;">2</span>025      <span style="text-decoration: underline;">71</span>223        86.3</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -290,7 +389,15 @@ largest district east of the Cascades.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">spokane</span></span></code></pre></div>
+<span><span class="va">spokane</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
+<span><span class="co">#&gt;   district_name                         n_students</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Spokane School District                    <span style="text-decoration: underline;">29</span>690</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> East Valley School District (Spokane)       <span style="text-decoration: underline;">3</span>655</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> West Valley School District (Spokane)       <span style="text-decoration: underline;">3</span>501</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Spokane International Academy                830</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Innovation Spokane Schools                   235</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -310,7 +417,14 @@ challenging their long-term viability.</p>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">size_bucket</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">district_sizes</span></span></code></pre></div>
+<span><span class="va">district_sizes</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   size_bucket           n</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Large (2K-10K)       81</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Medium (500-2K)      87</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Small (&lt;500)        130</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Very Large (10K+)    32</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -324,7 +438,26 @@ Seattle has declined.</p>
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Tacoma"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tacoma</span></span></code></pre></div>
+<span><span class="va">tacoma</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 3</span></span></span>
+<span><span class="co">#&gt;    end_year district_name          n_students</span></span>
+<span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>     <span style="text-decoration: underline;">2</span>010 Tacoma School District      <span style="text-decoration: underline;">59</span>250</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>     <span style="text-decoration: underline;">2</span>011 Tacoma School District      <span style="text-decoration: underline;">59</span>712</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>     <span style="text-decoration: underline;">2</span>012 Tacoma School District      <span style="text-decoration: underline;">59</span>408</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>     <span style="text-decoration: underline;">2</span>013 Tacoma School District      <span style="text-decoration: underline;">60</span>244</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>     <span style="text-decoration: underline;">2</span>014 Tacoma School District      <span style="text-decoration: underline;">60</span>822</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>     <span style="text-decoration: underline;">2</span>015 Tacoma School District      <span style="text-decoration: underline;">30</span>606</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>     <span style="text-decoration: underline;">2</span>016 Tacoma School District      <span style="text-decoration: underline;">30</span>554</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>     <span style="text-decoration: underline;">2</span>017 Tacoma School District      <span style="text-decoration: underline;">30</span>326</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>     <span style="text-decoration: underline;">2</span>018 Tacoma School District      <span style="text-decoration: underline;">30</span>414</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>     <span style="text-decoration: underline;">2</span>019 Tacoma School District      <span style="text-decoration: underline;">30</span>320</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>     <span style="text-decoration: underline;">2</span>020 Tacoma School District      <span style="text-decoration: underline;">30</span>406</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>     <span style="text-decoration: underline;">2</span>021 Tacoma School District      <span style="text-decoration: underline;">28</span>734</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>     <span style="text-decoration: underline;">2</span>022 Tacoma School District      <span style="text-decoration: underline;">28</span>779</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>     <span style="text-decoration: underline;">2</span>023 Tacoma School District      <span style="text-decoration: underline;">28</span>457</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>     <span style="text-decoration: underline;">2</span>024 Tacoma School District      <span style="text-decoration: underline;">28</span>353</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>     <span style="text-decoration: underline;">2</span>025 Tacoma School District      <span style="text-decoration: underline;">29</span>014</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
@@ -346,7 +479,15 @@ transformation.</p>
 <span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span> <span class="op">~</span> <span class="st">"Current"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">decade_summary</span></span></code></pre></div>
+<span><span class="va">decade_summary</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt;   end_year n_students label         </span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     <span style="text-decoration: underline;">2</span>010    2<span style="text-decoration: underline;">069</span>870 Post-recession</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     <span style="text-decoration: underline;">2</span>015    1<span style="text-decoration: underline;">086</span>314 Tech boom     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     <span style="text-decoration: underline;">2</span>019    1<span style="text-decoration: underline;">137</span>367 Pre-COVID peak</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     <span style="text-decoration: underline;">2</span>021    1<span style="text-decoration: underline;">093</span>331 COVID low     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     <span style="text-decoration: underline;">2</span>025    1<span style="text-decoration: underline;">105</span>384 Current</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
