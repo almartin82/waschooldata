@@ -1,13 +1,10 @@
 Package: waschooldata
-Title: Fetch and Process Washington State School Data
+Title: Washington School Data
 Version: 0.1.0
 Authors@R:
     person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
-Description: Downloads and processes school data from the Washington Office of
-    Superintendent of Public Instruction (OSPI). Provides functions for fetching
-    enrollment data from the Washington State Report Card via the data.wa.gov
-    Socrata API, covering 16 years of historical data (2009-10 through 2024-25
-    school years). Transforms data into tidy format for analysis.
+Description: A simple, consistent interface for accessing Washington
+    school data in R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
