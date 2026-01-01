@@ -13,3 +13,4 @@ Meta/
 # Build artifacts
 *.tar.gz
 *.zip
+..Rcheck/

@@ -289,11 +289,11 @@ aggregate_grade_data <- function(df, end_year) {
   # Keep grade-specific data separate for grade-level analysis
 
   # Create organization-level summaries from "All Grades" rows
-  all_grades_df <- df %>%
+  all_grades_df <- df |>
     dplyr::filter(grade_level == "TOTAL" | is.na(grade_level))
 
   # Create grade-level data (excluding "All Grades")
-  grade_df <- df %>%
+  grade_df <- df |>
     dplyr::filter(grade_level != "TOTAL" & !is.na(grade_level))
 
   # If we have all-grades rows, use those as the main data
@@ -315,12 +315,12 @@ aggregate_grade_data <- function(df, end_year) {
     result <- all_grades_df
   } else {
     # No all-grades rows - aggregate from grade-level data
-    result <- df %>%
-      dplyr::group_by(dplyr::across(dplyr::all_of(key_cols))) %>%
+    result <- df |>
+      dplyr::group_by(dplyr::across(dplyr::all_of(key_cols))) |>
       dplyr::summarize(
         dplyr::across(dplyr::all_of(num_cols), ~sum(.x, na.rm = TRUE)),
         .groups = "drop"
-      ) %>%
+      ) |>
       dplyr::mutate(end_year = end_year)
 
     # Add grade columns from grade-level data
@@ -359,9 +359,9 @@ create_grade_columns <- function(grade_df, key_cols) {
   }
 
   # Filter to valid grades and select needed columns
-  grade_df <- grade_df %>%
+  grade_df <- grade_df |>
     dplyr::filter(grade_level %in% c("PK", "K", "01", "02", "03", "04", "05",
-                                      "06", "07", "08", "09", "10", "11", "12")) %>%
+                                      "06", "07", "08", "09", "10", "11", "12")) |>
     dplyr::select(dplyr::all_of(c(key_cols, "grade_level", "row_total")))
 
   if (nrow(grade_df) == 0) {
@@ -369,7 +369,7 @@ create_grade_columns <- function(grade_df, key_cols) {
   }
 
   # Pivot to wide format
-  grade_wide <- grade_df %>%
+  grade_wide <- grade_df |>
     tidyr::pivot_wider(
       names_from = grade_level,
       values_from = row_total,
@@ -404,7 +404,7 @@ create_state_aggregate <- function(df, end_year) {
   }
 
   # Get district-level rows
-  district_df <- df %>%
+  district_df <- df |>
     dplyr::filter(type == "District")
 
   if (nrow(district_df) == 0) {
