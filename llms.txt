@@ -3,9 +3,9 @@
 **[Documentation](https://almartin82.github.io/waschooldata/)** \|
 [GitHub](https://github.com/almartin82/waschooldata)
 
-An R package for accessing Washington State school enrollment data from
-the Office of Superintendent of Public Instruction (OSPI). **16 years of
-data** (2010-2025) for every school, district, and the state via the
+Fetch and analyze Washington school enrollment data from
+[OSPI](https://data.wa.gov/) in R or Python. **16 years of data**
+(2010-2025) for every school, district, and the state via the
 data.wa.gov Socrata API.
 
 ## What can you find with waschooldata?
@@ -239,7 +239,7 @@ for more insights.
 devtools::install_github("almartin82/waschooldata")
 ```
 
-## Quick Start
+## R Quick Start
 
 ``` r
 library(waschooldata)
@@ -260,6 +260,30 @@ enr |>
   arrange(desc(n_students)) |>
   select(district_name, n_students) |>
   head(5)
+```
+
+## Python Quick Start
+
+``` python
+import pywaschooldata as wa
+
+# Fetch 2024 data (2023-24 school year)
+enr = wa.fetch_enr(2024)
+
+# Statewide total
+total = enr[(enr['is_state'] == True) &
+            (enr['subgroup'] == 'total_enrollment') &
+            (enr['grade_level'] == 'TOTAL')]['n_students'].sum()
+print(f"{total:,} students")
+#> 1,108,123 students
+
+# Get multiple years
+enr_multi = wa.fetch_enr_multi([2020, 2021, 2022, 2023, 2024])
+
+# Check available years
+years = wa.get_available_years()
+print(f"Data available: {years['min_year']}-{years['max_year']}")
+#> Data available: 2010-2025
 ```
 
 ## Data Format

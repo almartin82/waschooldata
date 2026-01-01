@@ -57,7 +57,7 @@
 <!-- badges: start -->
 
 <p><strong><a href="https://almartin82.github.io/waschooldata/">Documentation</a></strong> | <a href="https://github.com/almartin82/waschooldata" class="external-link">GitHub</a></p>
-<p>An R package for accessing Washington State school enrollment data from the Office of Superintendent of Public Instruction (OSPI). <strong>16 years of data</strong> (2010-2025) for every school, district, and the state via the data.wa.gov Socrata API.</p>
+<p>Fetch and analyze Washington school enrollment data from <a href="https://data.wa.gov/" class="external-link">OSPI</a> in R or Python. <strong>16 years of data</strong> (2010-2025) for every school, district, and the state via the data.wa.gov Socrata API.</p>
 <div class="section level2">
 <h2 id="what-can-you-find-with-waschooldata">What can you find with waschooldata?<a class="anchor" aria-label="anchor" href="#what-can-you-find-with-waschooldata"></a>
 </h2>
@@ -252,7 +252,7 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/waschooldata"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+<h2 id="r-quick-start">R Quick Start<a class="anchor" aria-label="anchor" href="#r-quick-start"></a>
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/waschooldata/">waschooldata</a></span><span class="op">)</span></span>
@@ -273,6 +273,29 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="python-quick-start">Python Quick Start<a class="anchor" aria-label="anchor" href="#python-quick-start"></a>
+</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="im">import</span> pywaschooldata <span class="im">as</span> wa</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>enr <span class="op">=</span> wa.fetch_enr(<span class="dv">2024</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; 1,108,123 students</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>enr_multi <span class="op">=</span> wa.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co"># Check available years</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>years <span class="op">=</span> wa.get_available_years()</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; Data available: 2010-2025</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-format">Data Format<a class="anchor" aria-label="anchor" href="#data-format"></a>
@@ -417,6 +440,7 @@
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/almartin82/waschooldata/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/almartin82/waschooldata/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/almartin82/waschooldata/actions/workflows/python-test.yaml" class="external-link"><img src="https://github.com/almartin82/waschooldata/actions/workflows/python-test.yaml/badge.svg" alt="Python Tests"></a></li>
 </ul>
 </div>
 
