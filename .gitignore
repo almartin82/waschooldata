@@ -7,8 +7,6 @@
 
 # Documentation
 docs/
-doc/
-Meta/
 
 # Build artifacts
 *.tar.gz
