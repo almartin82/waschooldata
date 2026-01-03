@@ -55,7 +55,8 @@ test_that("get_available_years returns valid range", {
 })
 
 test_that("get_dataset_id returns IDs for known years", {
-  # Report Card Enrollment dataset IDs (2015-2024)
+  # Report Card Enrollment dataset IDs (2015-2025)
+  expect_equal(get_dataset_id(2025), "2rwv-gs2e")
   expect_equal(get_dataset_id(2024), "q4ba-s3jc")
   expect_equal(get_dataset_id(2023), "dij7-mbxg")
   expect_equal(get_dataset_id(2022), "ymi4-syjv")
@@ -82,7 +83,7 @@ test_that("get_dataset_id returns IDs for known years", {
 test_that("fetch_enr validates year parameter", {
   # Years outside the available range should error
   expect_error(fetch_enr(2009), "end_year must be between")  # Before 2010
-  expect_error(fetch_enr(2030), "end_year must be between")  # After 2024
+  expect_error(fetch_enr(2030), "end_year must be between")  # After 2025
   expect_error(fetch_enr(1990), "end_year must be between")  # Way before available range
 })
 

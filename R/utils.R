@@ -105,10 +105,10 @@ format_school_year <- function(end_year) {
 get_available_years <- function() {
 
   # Washington State enrollment data is available on data.wa.gov
-  # Modern schema datasets: 2010-2024 (Student Enrollment + Report Card Enrollment)
+  # Modern schema datasets: 2010-2025 (Student Enrollment + Report Card Enrollment)
   # Legacy datasets exist for 1994-2001 but have different schema
   # See get_dataset_id() for the specific IDs
-  2010:2024
+  2010:2025
 }
 
 
@@ -129,9 +129,10 @@ get_dataset_id <- function(end_year) {
   # These are the 4-4 alphanumeric codes in the URLs
   # Verified from: https://data.wa.gov/browse?category=Education
 
-  # Report Card Enrollment datasets (2015-2024)
+  # Report Card Enrollment datasets (2015-2025)
   # URL pattern: https://data.wa.gov/education/Report-Card-Enrollment-YYYY-YY-School-Year/{id}
   report_card_ids <- list(
+    "2025" = "2rwv-gs2e",
     "2024" = "q4ba-s3jc",
     "2023" = "dij7-mbxg",
     "2022" = "ymi4-syjv",

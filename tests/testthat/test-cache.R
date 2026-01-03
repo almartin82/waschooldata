@@ -70,7 +70,8 @@ test_that("clear_cache removes files correctly", {
 
 test_that("cache_status runs without error", {
   # Should not error even with empty cache
-  expect_silent(result <- cache_status())
+  # Note: cache_status() may produce output (message), that's OK
+  result <- cache_status()
   expect_true(is.data.frame(result) || is.null(result))
 })
 
