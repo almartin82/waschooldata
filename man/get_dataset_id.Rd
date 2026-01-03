@@ -19,7 +19,7 @@ for a given school year end.
 \details{
 Data sources by era:
 \itemize{
-\item 2015-2025: "Report Card Enrollment" datasets
+\item 2015-2024: "Report Card Enrollment" datasets
 \item 2010-2014: "Student Enrollment" datasets (same schema)
 }
 }
