@@ -8,7 +8,7 @@ fetch_enr(end_year, tidy = TRUE, use_cache = TRUE)
 }
 \arguments{
 \item{end_year}{A school year. Year is the end of the academic year - eg 2023-24
-school year is year '2024'. Valid values are 2010-2025 (Socrata API).}
+school year is year '2024'. Valid values are 2010-2024 (Socrata API).}
 
 \item{tidy}{If TRUE (default), returns data in long (tidy) format with subgroup
 column. If FALSE, returns wide format.}
@@ -37,7 +37,7 @@ enr_wide <- fetch_enr(2024, tidy = FALSE)
 enr_fresh <- fetch_enr(2024, use_cache = FALSE)
 
 # Filter to specific district
-seattle <- enr_2024 \%>\%
+seattle <- enr_2024 |>
   dplyr::filter(district_name == "Seattle School District No. 1")
 }
 }

@@ -16,10 +16,10 @@ from the Washington State Report Card data portal.
 \details{
 Data Eras:
 \itemize{
-\item Era 1 (2010-2025): Modern schema via data.wa.gov Socrata API
+\item Era 1 (2010-2024): Modern schema via data.wa.gov Socrata API
 \itemize{
 \item 2010-2014: "Student Enrollment" datasets (same schema)
-\item 2015-2025: "Report Card Enrollment" datasets
+\item 2015-2024: "Report Card Enrollment" datasets
 }
 \item Era 2 (1994-2001): Legacy schema with different column structure
 (not currently supported - requires separate processing)
