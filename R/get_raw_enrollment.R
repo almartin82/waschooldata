@@ -9,8 +9,8 @@
 # API documentation: https://dev.socrata.com/
 #
 # Format Eras:
-# - Era 1 (2010-2025): data.wa.gov Socrata API with consistent column names
-#   - 2015-2025: "Report Card Enrollment" datasets
+# - Era 1 (2010-2024): data.wa.gov Socrata API with consistent column names
+#   - 2015-2024: "Report Card Enrollment" datasets
 #   - 2010-2014: "Student Enrollment" datasets (same schema)
 # - Era 2 (1994-2001): Legacy format with different schema (not currently supported)
 #   - Separate District/County/State enrollment datasets

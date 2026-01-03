@@ -13,7 +13,7 @@
 #' via the data.wa.gov open data portal.
 #'
 #' @param end_year A school year. Year is the end of the academic year - eg 2023-24
-#'   school year is year '2024'. Valid values are 2010-2025 (Socrata API).
+#'   school year is year '2024'. Valid values are 2010-2024 (Socrata API).
 #' @param tidy If TRUE (default), returns data in long (tidy) format with subgroup
 #'   column. If FALSE, returns wide format.
 #' @param use_cache If TRUE (default), uses locally cached data when available.
