@@ -27,7 +27,7 @@ library(ggplot2)
 theme_set(theme_minimal(base_size = 14))
 ```
 
-This vignette explores Washington's public school enrollment data, surfacing key trends across 16 years of data (2010-2025).
+This vignette explores Washington's public school enrollment data, surfacing key trends across 15 years of data (2010-2024).
 
 ---
 
@@ -36,7 +36,7 @@ This vignette explores Washington's public school enrollment data, surfacing key
 The Evergreen State added students for a decade, reaching over 1.1 million before pandemic disruption.
 
 ```{r statewide-data}
-enr <- fetch_enr_multi(2010:2025)
+enr <- fetch_enr_multi(2010:2024)
 
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
@@ -56,7 +56,7 @@ ggplot(state_totals, aes(x = end_year, y = n_students)) +
            label = "COVID", hjust = 0, color = "red", size = 3) +
   scale_y_continuous(labels = scales::comma) +
   labs(
-    title = "Washington Public School Enrollment (2010-2025)",
+    title = "Washington Public School Enrollment (2010-2024)",
     subtitle = "A decade of growth disrupted by the pandemic",
     x = "School Year (ending)",
     y = "Total Enrollment"
@@ -83,7 +83,7 @@ seattle
 ```{r top-districts-chart}
 top_districts <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         end_year == 2025) |>
+         end_year == 2024) |>
   arrange(desc(n_students)) |>
   head(5) |>
   pull(district_id)
@@ -116,7 +116,7 @@ The state's demographics reflect Pacific Rim immigration and a growing Hispanic 
 demographics <- enr |>
   filter(is_state, grade_level == "TOTAL",
          subgroup %in% c("white", "hispanic", "asian", "black", "multiracial"),
-         end_year %in% c(2010, 2015, 2020, 2025)) |>
+         end_year %in% c(2010, 2015, 2020, 2024)) |>
   select(end_year, subgroup, n_students, pct) |>
   mutate(pct = round(pct * 100, 1))
 
@@ -135,7 +135,7 @@ enr |>
   scale_color_brewer(palette = "Set2",
                      labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")) +
   labs(
-    title = "Washington's Shifting Demographics (2010-2025)",
+    title = "Washington's Shifting Demographics (2010-2024)",
     subtitle = "White enrollment declining as Hispanic and multiracial populations grow",
     x = "School Year",
     y = "Percent of Students",
@@ -154,7 +154,7 @@ The I-5 corridor dominates enrollment, but Eastern Washington's districts face d
 # Group by ESD (Educational Service District) to show regional patterns
 esd_enrollment <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         end_year == 2025, !is.na(esd_name)) |>
+         end_year == 2024, !is.na(esd_name)) |>
   group_by(esd_name) |>
   summarize(
     districts = n(),
@@ -202,13 +202,13 @@ Districts in the Seattle-Bellevue-Redmond tech corridor have seen growth even as
 # Calculate growth rates for districts with significant enrollment
 growth_rates <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         end_year %in% c(2015, 2025)) |>
+         end_year %in% c(2015, 2024)) |>
   select(district_id, district_name, end_year, n_students) |>
   pivot_wider(names_from = end_year, values_from = n_students, names_prefix = "yr_") |>
   filter(yr_2015 > 5000) |>  # Focus on larger districts
   mutate(
-    change = yr_2025 - yr_2015,
-    pct_change = round((yr_2025 - yr_2015) / yr_2015 * 100, 1)
+    change = yr_2024 - yr_2015,
+    pct_change = round((yr_2024 - yr_2015) / yr_2015 * 100, 1)
   ) |>
   arrange(desc(pct_change))
 
@@ -226,7 +226,7 @@ growth_rates |>
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.15))) +
   scale_fill_manual(values = c("TRUE" = "#4B2E83", "FALSE" = "#C4A055")) +
   labs(
-    title = "Fastest Growing Large Districts (2015-2025)",
+    title = "Fastest Growing Large Districts (2015-2024)",
     subtitle = "Among districts with 5,000+ students in 2015",
     x = "Percent Change",
     y = NULL
@@ -258,7 +258,7 @@ Spokane Public Schools serves over 30,000 students, making it the largest distri
 spokane <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Spokane", district_name, ignore.case = TRUE),
-         end_year == 2025) |>
+         end_year == 2024) |>
   select(district_name, n_students) |>
   arrange(desc(n_students))
 
@@ -274,7 +274,7 @@ Dozens of Washington districts have fewer than 500 students, challenging their l
 ```{r small-districts}
 district_sizes <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         end_year == 2025) |>
+         end_year == 2024) |>
   mutate(size_bucket = case_when(
     n_students < 500 ~ "Small (<500)",
     n_students < 2000 ~ "Medium (500-2K)",
@@ -303,21 +303,21 @@ tacoma
 
 ---
 
-## 10. 16 years of data capture major shifts
+## 10. 15 years of data capture major shifts
 
-Washington's enrollment data spans 2010-2025, documenting the Amazon/Microsoft boom, pandemic disruption, and demographic transformation.
+Washington's enrollment data spans 2010-2024, documenting the Amazon/Microsoft boom, pandemic disruption, and demographic transformation.
 
 ```{r summary-table}
 decade_summary <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL",
-         end_year %in% c(2010, 2015, 2019, 2021, 2025)) |>
+         end_year %in% c(2010, 2015, 2019, 2021, 2024)) |>
   select(end_year, n_students) |>
   mutate(label = case_when(
     end_year == 2010 ~ "Post-recession",
     end_year == 2015 ~ "Tech boom",
     end_year == 2019 ~ "Pre-COVID peak",
     end_year == 2021 ~ "COVID low",
-    end_year == 2025 ~ "Current"
+    end_year == 2024 ~ "Current"
   ))
 
 decade_summary
