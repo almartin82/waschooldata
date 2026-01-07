@@ -12,3 +12,4 @@ docs/
 *.tar.gz
 *.zip
 *.Rcheck/
+EXPANSION.md

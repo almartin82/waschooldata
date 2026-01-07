@@ -1,3 +1,10 @@
+### CONCURRENT TASK LIMIT
+- **Maximum 5 background tasks running simultaneously**
+- When launching multiple agents (e.g., for mass audits), batch them in groups of 5
+- Wait for the current batch to complete before launching the next batch
+
+---
+
 # Claude Code Instructions
 
 ### GIT COMMIT POLICY
