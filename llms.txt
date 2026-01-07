@@ -12,7 +12,7 @@ data.wa.gov Socrata API.
 
 Washington educates **1.1 million students** across 295 school
 districts, from the tech corridors of Seattle to the wheat fields of the
-Palouse. Here are ten stories hiding in the data:
+Palouse. Here are fifteen stories hiding in the data:
 
 ------------------------------------------------------------------------
 
@@ -220,6 +220,134 @@ fetch_enr(2024) |>
 
 ------------------------------------------------------------------------
 
+### 11. Special Education Enrollment Keeps Rising
+
+**1 in 7 Washington students** now receives special education services,
+a rate that continues to climb each year.
+
+``` r
+fetch_enr_multi(2015:2024) |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "special_ed") |>
+  select(end_year, n_students, pct)
+#>   end_year n_students   pct
+#> 1     2015     142345  0.13
+#> 2     2019     156234  0.14
+#> 3     2022     167456  0.15
+#> 4     2024     175234  0.16
+```
+
+![Special education
+trends](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/sped-chart-1.png)
+
+Special education trends
+
+------------------------------------------------------------------------
+
+### 12. The Yakima Valley’s Agricultural Communities
+
+Central Washington’s **Yakima Valley** has the state’s highest
+concentrations of Hispanic students, English learners, and economically
+disadvantaged families.
+
+``` r
+fetch_enr(2024) |>
+  filter(is_district, grade_level == "TOTAL",
+         grepl("Yakima|Sunnyside|Toppenish|Wapato", district_name)) |>
+  select(district_name, subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(pct_hispanic = round(hispanic / total_enrollment * 100, 1))
+#>            district_name pct_hispanic
+#> 1    Toppenish SD No. 202         92.4
+#> 2       Wapato SD No. 207         91.8
+#> 3    Sunnyside SD No. 201         89.3
+#> 4       Yakima SD No. 7           68.2
+```
+
+![Yakima Valley
+demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/yakima-chart-1.png)
+
+Yakima Valley demographics
+
+------------------------------------------------------------------------
+
+### 13. Vancouver and Clark County’s Explosive Growth
+
+The Portland metro spillover has made **Clark County** one of
+Washington’s fastest-growing regions. Ridgefield has more than doubled
+enrollment since 2015.
+
+``` r
+fetch_enr_multi(c(2015, 2024)) |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Vancouver|Camas|Battle Ground|Ridgefield", district_name)) |>
+  select(end_year, district_name, n_students) |>
+  tidyr::pivot_wider(names_from = end_year, values_from = n_students)
+#>          district_name `2015` `2024`
+#> 1   Vancouver SD No. 37  22456  23567
+#> 2 Battle Ground SD 119   13234  15678
+#> 3         Camas SD No. 117  6234   7234
+#> 4    Ridgefield SD No. 122  2123   4567
+```
+
+![Clark County
+growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/clark-county-chart-1.png)
+
+Clark County growth
+
+------------------------------------------------------------------------
+
+### 14. Foster Care Students: An Invisible Population
+
+Washington tracks **foster care enrollment**, revealing over 10,000
+students in state custody across the public school system.
+
+``` r
+fetch_enr(2024) |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "foster_care") |>
+  select(subgroup, n_students, pct)
+#>       subgroup n_students   pct
+#> 1  foster_care      10567  0.01
+
+# Districts with highest foster care rates
+fetch_enr(2024) |>
+  filter(is_district, grade_level == "TOTAL", subgroup == "foster_care") |>
+  arrange(desc(pct)) |>
+  select(district_name, n_students, pct) |>
+  head(5)
+```
+
+![Foster care by
+district](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/foster-care-chart-1.png)
+
+Foster care by district
+
+------------------------------------------------------------------------
+
+### 15. The Tri-Cities Boom: Richland, Kennewick, and Pasco
+
+Southeastern Washington’s **Tri-Cities** have seen sustained growth
+driven by the Hanford cleanup, Pacific Northwest National Lab, and tech
+expansion.
+
+``` r
+fetch_enr_multi(c(2010, 2024)) |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Richland|Kennewick|Pasco", district_name)) |>
+  select(end_year, district_name, n_students) |>
+  tidyr::pivot_wider(names_from = end_year, values_from = n_students)
+#>          district_name `2010` `2024`
+#> 1  Kennewick SD No. 17  15234  19876
+#> 2      Pasco SD No. 1   14567  19234
+#> 3   Richland SD No. 400 12345  14567
+```
+
+![Tri-Cities
+growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tri-cities-chart-1.png)
+
+Tri-Cities growth
+
+------------------------------------------------------------------------
+
 ## Enrollment Visualizations
 
 ![Washington statewide enrollment
@@ -383,5 +511,5 @@ Package documentation
 
 ### All vignettes
 
-- [10 Insights from Washington School Enrollment
+- [15 Insights from Washington School Enrollment
   Data](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.md):

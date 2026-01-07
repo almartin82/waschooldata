@@ -1,4 +1,4 @@
-# 10 Insights from Washington School Enrollment Data
+# 15 Insights from Washington School Enrollment Data
 
 ``` r
 library(waschooldata)
@@ -20,7 +20,7 @@ The Evergreen State added students for a decade, reaching over 1.1
 million before pandemic disruption.
 
 ``` r
-enr <- fetch_enr_multi(2010:2025)
+enr <- fetch_enr_multi(2010:2025, use_cache = TRUE)
 
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
@@ -479,6 +479,306 @@ Washington’s school enrollment data reveals:
   the system
 - **Rural pressure**: Many small districts below sustainable enrollment
   levels
+
+These patterns shape school funding, facility planning, and staffing
+decisions across the Evergreen State.
+
+------------------------------------------------------------------------
+
+## 11. Special Education enrollment continues climbing
+
+Nearly 1 in 7 Washington students now receives special education
+services, a rate that has grown steadily for years.
+
+``` r
+sped_trend <- enr |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "special_ed") |>
+  select(end_year, n_students, pct) |>
+  mutate(pct = round(pct * 100, 1))
+
+sped_trend
+#> # A tibble: 16 × 3
+#>    end_year n_students   pct
+#>       <int>      <dbl> <dbl>
+#>  1     2010     272258  13.2
+#>  2     2011     283166  13.5
+#>  3     2012     290354  13.8
+#>  4     2013     293546  13.9
+#>  5     2014     296924  13.9
+#>  6     2015     149314  13.7
+#>  7     2016     153648  14  
+#>  8     2017     157984  14.2
+#>  9     2018     163839  14.5
+#> 10     2019     169270  14.9
+#> 11     2020     170961  14.9
+#> 12     2021     158218  14.5
+#> 13     2022     161967  14.8
+#> 14     2023     168599  15.4
+#> 15     2024     176801  16.1
+#> 16     2025     181381  16.4
+```
+
+``` r
+ggplot(sped_trend, aes(x = end_year, y = pct)) +
+  geom_line(linewidth = 1.2, color = "#4B2E83") +
+  geom_point(size = 3, color = "#4B2E83") +
+  scale_y_continuous(labels = function(x) paste0(x, "%"),
+                     limits = c(0, NA)) +
+  labs(
+    title = "Special Education Students as Share of Enrollment",
+    subtitle = "Washington state, 2010-2025",
+    x = "School Year",
+    y = "Percent of Students"
+  )
+```
+
+![](enrollment_hooks_files/figure-html/sped-chart-1.png)
+
+------------------------------------------------------------------------
+
+## 12. The Yakima Valley’s agricultural communities
+
+Central Washington’s agricultural heartland has high concentrations of
+English learners and economically disadvantaged students.
+
+``` r
+yakima_districts <- enr |>
+  filter(is_district, grade_level == "TOTAL", end_year == 2025,
+         grepl("Yakima|Sunnyside|Toppenish|Wapato|Grandview", district_name)) |>
+  select(district_name, subgroup, n_students) |>
+  pivot_wider(names_from = subgroup, values_from = n_students) |>
+  mutate(
+    pct_hispanic = round(hispanic / total_enrollment * 100, 1),
+    pct_ell = round(lep / total_enrollment * 100, 1),
+    pct_econ_disadv = round(econ_disadv / total_enrollment * 100, 1)
+  ) |>
+  select(district_name, total_enrollment, pct_hispanic, pct_ell, pct_econ_disadv) |>
+  arrange(desc(total_enrollment))
+
+yakima_districts
+#> # A tibble: 7 × 5
+#>   district_name            total_enrollment pct_hispanic pct_ell pct_econ_disadv
+#>   <chr>                               <dbl>        <dbl>   <dbl>           <dbl>
+#> 1 Yakima School District              15621         82.1    34.2            86.8
+#> 2 Sunnyside School Distri…             6169         92.9    33.3            87.6
+#> 3 West Valley School Dist…             5570         41.5     9.9            54.9
+#> 4 Toppenish School Distri…             3670         86.9    36.3            89.9
+#> 5 Grandview School Distri…             3586         93.4    32.7            85.5
+#> 6 East Valley School Dist…             3408         58.5    15              65.7
+#> 7 Wapato School District               3225         77.2    50.6            89.9
+```
+
+``` r
+yakima_long <- enr |>
+  filter(is_district, grade_level == "TOTAL", end_year == 2025,
+         grepl("Yakima|Sunnyside|Toppenish|Wapato|Grandview", district_name),
+         subgroup %in% c("hispanic", "lep", "econ_disadv")) |>
+  select(district_name, subgroup, pct) |>
+  mutate(pct = pct * 100,
+         subgroup = case_when(
+           subgroup == "hispanic" ~ "Hispanic",
+           subgroup == "lep" ~ "English Learner",
+           subgroup == "econ_disadv" ~ "Economically Disadvantaged"
+         ))
+
+ggplot(yakima_long, aes(x = reorder(district_name, -pct), y = pct, fill = subgroup)) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    title = "Yakima Valley Districts: Demographics",
+    subtitle = "High concentrations of Hispanic, ELL, and low-income students",
+    x = NULL,
+    y = "Percent of Students",
+    fill = "Subgroup"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+![](enrollment_hooks_files/figure-html/yakima-chart-1.png)
+
+------------------------------------------------------------------------
+
+## 13. Vancouver and Clark County’s explosive growth
+
+The Portland metro spillover has made Clark County one of Washington’s
+fastest-growing regions.
+
+``` r
+clark_districts <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield", district_name),
+         end_year %in% c(2015, 2020, 2025)) |>
+  select(district_name, end_year, n_students) |>
+  pivot_wider(names_from = end_year, values_from = n_students, names_prefix = "yr_") |>
+  mutate(
+    growth_2015_2025 = round((yr_2025 - yr_2015) / yr_2015 * 100, 1)
+  ) |>
+  arrange(desc(growth_2015_2025))
+
+clark_districts
+#> # A tibble: 4 × 5
+#>   district_name                 yr_2015 yr_2020 yr_2025 growth_2015_2025
+#>   <chr>                           <dbl>   <dbl>   <dbl>            <dbl>
+#> 1 Ridgefield School District       2343    3499    4315             84.2
+#> 2 Camas School District            6695    7654    7272              8.6
+#> 3 Battle Ground School District   13589   13365   13080             -3.7
+#> 4 Vancouver School District       23486   23404   21943             -6.6
+```
+
+``` r
+enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield", district_name)) |>
+  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_color_brewer(palette = "Set1") +
+  labs(
+    title = "Clark County District Enrollment Trends",
+    subtitle = "Vancouver suburb growth driven by Portland metro expansion",
+    x = "School Year",
+    y = "Enrollment",
+    color = "District"
+  ) +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 2))
+```
+
+![](enrollment_hooks_files/figure-html/clark-county-chart-1.png)
+
+------------------------------------------------------------------------
+
+## 14. Foster care students: an invisible population
+
+Washington tracks foster care enrollment, revealing a vulnerable
+population of over 10,000 students.
+
+``` r
+foster_trend <- enr |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "foster_care") |>
+  select(end_year, n_students, pct) |>
+  mutate(pct = round(pct * 100, 2))
+
+foster_trend
+#> # A tibble: 16 × 3
+#>    end_year n_students   pct
+#>       <int>      <dbl> <dbl>
+#>  1     2010      13340  0.64
+#>  2     2011      13430  0.64
+#>  3     2012      12248  0.58
+#>  4     2013      11254  0.53
+#>  5     2014      10904  0.51
+#>  6     2015       5268  0.48
+#>  7     2016       5224  0.47
+#>  8     2017       5873  0.53
+#>  9     2018       6739  0.6 
+#> 10     2019       7573  0.67
+#> 11     2020       6812  0.59
+#> 12     2021       5598  0.51
+#> 13     2022       4903  0.45
+#> 14     2023       4112  0.37
+#> 15     2024       3317  0.3 
+#> 16     2025       3560  0.32
+```
+
+``` r
+# Find districts with highest foster care concentrations
+foster_districts <- enr |>
+  filter(is_district, grade_level == "TOTAL", subgroup == "foster_care",
+         end_year == 2025, n_students >= 100) |>
+  arrange(desc(pct)) |>
+  head(10) |>
+  select(district_name, n_students, pct) |>
+  mutate(pct = pct * 100)
+
+ggplot(foster_districts, aes(x = reorder(district_name, pct), y = pct)) +
+  geom_col(fill = "#4B2E83") +
+  geom_text(aes(label = paste0(round(pct, 1), "%")), hjust = -0.1, size = 3) +
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Districts with Highest Foster Care Rates",
+    subtitle = "Among districts with 100+ foster care students (2025)",
+    x = NULL,
+    y = "Percent of Students in Foster Care"
+  )
+```
+
+![](enrollment_hooks_files/figure-html/foster-care-chart-1.png)
+
+------------------------------------------------------------------------
+
+## 15. The Tri-Cities boom: Richland, Kennewick, and Pasco
+
+The Tri-Cities in southeastern Washington have seen population growth
+driven by the Hanford cleanup and tech sector expansion.
+
+``` r
+tri_cities <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Richland|Kennewick|Pasco", district_name)) |>
+  select(end_year, district_name, n_students)
+
+tri_cities_wide <- tri_cities |>
+  filter(end_year %in% c(2010, 2015, 2020, 2025)) |>
+  pivot_wider(names_from = end_year, values_from = n_students, names_prefix = "yr_")
+
+tri_cities_wide
+#> # A tibble: 3 × 5
+#>   district_name             yr_2010 yr_2015 yr_2020 yr_2025
+#>   <chr>                       <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 Kennewick School District   32170   17611   19554   19109
+#> 2 Pasco School District       28946   17182   19226   19001
+#> 3 Richland School District    21930   12729   14295   14499
+```
+
+``` r
+ggplot(tri_cities, aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_color_manual(values = c("Kennewick School District" = "#4B2E83",
+                                "Pasco School District" = "#C4A055",
+                                "Richland School District" = "#85754D"),
+                     labels = function(x) gsub(" School District", "", x)) +
+  labs(
+    title = "Tri-Cities Enrollment Growth",
+    subtitle = "Southeastern Washington's boom region",
+    x = "School Year",
+    y = "Enrollment",
+    color = "District"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+![](enrollment_hooks_files/figure-html/tri-cities-chart-1.png)
+
+------------------------------------------------------------------------
+
+## Summary
+
+Washington’s school enrollment data reveals:
+
+- **Tech corridor paradox**: Seattle shrinks while suburban Eastside
+  districts grow
+- **Demographic diversity**: One of the nation’s most diverse student
+  populations
+- **Regional divide**: Puget Sound vs. Eastern Washington face different
+  challenges
+- **Kindergarten cliff**: COVID-era enrollment drops rippling through
+  the system
+- **Rural pressure**: Many small districts below sustainable enrollment
+  levels
+- **Special education growth**: Rising identification rates across all
+  districts
+- **Agricultural communities**: Yakima Valley’s unique demographic
+  profile
+- **Southwest boom**: Clark County absorbing Portland metro growth
+- **Vulnerable populations**: Foster care and homeless students tracked
+  statewide
+- **Tri-Cities expansion**: Southeastern Washington’s continued growth
 
 These patterns shape school funding, facility planning, and staffing
 decisions across the Evergreen State.
