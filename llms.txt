@@ -18,7 +18,7 @@ Palouse. Here are fifteen stories hiding in the data:
 
 ### 1. Seattle’s Slow Fade
 
-**Seattle Public Schools** has lost 12,000 students since 2019, a 20%
+**Seattle Public Schools** has lost 4,300 students since 2019, an 8%
 drop that has triggered school closures and budget crises.
 
 ``` r
@@ -31,10 +31,10 @@ fetch_enr_multi(2015:2024) |>
          subgroup == "total_enrollment", grade_level == "TOTAL") |>
   select(end_year, n_students)
 #>   end_year n_students
-#> 1     2015      53314
-#> 2     2019      53145
-#> 3     2021      49823
-#> 4     2024      41234
+#> 1     2015      53361
+#> 2     2019      55325
+#> 3     2021      54021
+#> 4     2024      50968
 ```
 
 ------------------------------------------------------------------------
