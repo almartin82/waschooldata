@@ -40,6 +40,19 @@ reference:
   contents:
   - waschooldata-package
 
+articles:
+- title: "Getting Started"
+  navbar: ~
+  contents:
+  - enrollment_hooks
+- title: "Internal Documentation"
+  navbar: ~
+  contents:
+  - starts_with("CLAUDE")
+  - starts_with("EXPANSION")
+  - starts_with("TODO")
+  - starts_with("PRD")
+
 home:
   links:
   - text: Washington State Report Card

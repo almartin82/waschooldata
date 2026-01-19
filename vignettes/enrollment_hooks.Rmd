@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   fig.width = 8,
-  fig.height = 5
+  fig.height = 5,
+  cache = TRUE
 )
 ```
 
@@ -555,3 +556,11 @@ These patterns shape school funding, facility planning, and staffing decisions a
 ---
 
 *Data sourced from the Washington Office of Superintendent of Public Instruction (OSPI) via the [Washington State Report Card](https://washingtonstatereportcard.ospi.k12.wa.us/) and [data.wa.gov](https://data.wa.gov/).*
+
+---
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```
