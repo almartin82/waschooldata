@@ -39,6 +39,25 @@ state_totals <- enr |>
          pct_change = round(change / lag(n_students) * 100, 2))
 
 state_totals
+#> # A tibble: 16 x 4
+#>    end_year n_students   change pct_change
+#>       <dbl>      <dbl>    <dbl>      <dbl>
+#>  1     2010    2069870       NA      NA
+#>  2     2011    2090666    20796       1
+#>  3     2012    2102808    12142       0.58
+#>  4     2013    2117360    14552       0.69
+#>  5     2014    2136468    19108       0.9
+#>  6     2015    1086314 -1050154     -49.2
+#>  7     2016    1100849    14535       1.34
+#>  8     2017    1115820    14971       1.36
+#>  9     2018    1130714    14894       1.33
+#> 10     2019    1137367     6653       0.59
+#> 11     2020    1146882     9515       0.84
+#> 12     2021    1093331   -53551      -4.67
+#> 13     2022    1091343    -1988      -0.18
+#> 14     2023    1096695     5352       0.49
+#> 15     2024    1100059     3364       0.31
+#> 16     2025    1105384     5325       0.48
 ```
 
 ![Statewide enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png)
@@ -58,6 +77,25 @@ seattle <- enr |>
   mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
 
 seattle
+#> # A tibble: 16 x 4
+#>    end_year district_name                 n_students pct_of_peak
+#>       <dbl> <chr>                              <dbl>       <dbl>
+#>  1     2010 Seattle School District No. 1      94116        90.2
+#>  2     2011 Seattle School District No. 1      96598        92.6
+#>  3     2012 Seattle School District No. 1      99702        95.5
+#>  4     2013 Seattle School District No. 1     102402        98.1
+#>  5     2014 Seattle School District No. 1     104362       100
+#>  6     2015 Seattle School District No. 1      53361        51.1
+#>  7     2016 Seattle School District No. 1      53767        51.5
+#>  8     2017 Seattle School District No. 1      54722        52.4
+#>  9     2018 Seattle School District No. 1      55321        53
+#> 10     2019 Seattle School District No. 1      55325        53
+#> 11     2020 Seattle School District No. 1      56051        53.7
+#> 12     2021 Seattle School District No. 1      54021        51.8
+#> 13     2022 Seattle School District No. 1      51653        49.5
+#> 14     2023 Seattle School District No. 1      51528        49.4
+#> 15     2024 Seattle School District No. 1      50968        48.8
+#> 16     2025 Seattle School District No. 1      51200        49.1
 ```
 
 ![Top districts](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png)
@@ -78,6 +116,16 @@ demographics <- enr |>
 
 demographics |>
   pivot_wider(names_from = end_year, values_from = c(n_students, pct))
+#> # A tibble: 5 x 9
+#>   subgroup    n_students_2010 n_students_2015 n_students_2020 n_students_2025
+#>   <chr>                 <dbl>           <dbl>           <dbl>           <dbl>
+#> 1 white               1314286          615697          601749          526102
+#> 2 black                113030           48578           50251           53176
+#> 3 hispanic             334852          235730          273842          294985
+#> 4 asian                160750           77981           91377          100676
+#> 5 multiracial           71734           81757          101807          101068
+#> # i 4 more variables: pct_2010 <dbl>, pct_2015 <dbl>, pct_2020 <dbl>,
+#> #   pct_2025 <dbl>
 ```
 
 ![Demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png)
@@ -102,6 +150,20 @@ esd_enrollment <- enr |>
   arrange(desc(students))
 
 esd_enrollment
+#> # A tibble: 11 x 3
+#>    esd_name                                       districts students
+#>    <chr>                                              <int>    <dbl>
+#>  1 Puget Sound Educational Service District 121          35   427222
+#>  2 Northwest Educational Service District 189            35   166971
+#>  3 Educational Service District 112                      30    97301
+#>  4 Educational Service District 101                      59    94984
+#>  5 Educational Service District 123                      22    77778
+#>  6 Capital Region ESD 113                                44    75121
+#>  7 Educational Service District 105                      25    65229
+#>  8 North Central Educational Service District 171        29    48048
+#>  9 Olympic Educational Service District 114              15    46477
+#> 10 Washington State Charter School Commission            15     4600
+#> 11 Spokane Public Schools Charter Authorizer              2      268
 ```
 
 ![Regional chart](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png)
@@ -127,6 +189,19 @@ growth_rates <- enr |>
   arrange(desc(pct_change))
 
 head(growth_rates, 10)
+#> # A tibble: 10 x 6
+#>    district_id district_name                   yr_2015 yr_2025 change pct_change
+#>    <chr>       <chr>                             <dbl>   <dbl>  <dbl>      <dbl>
+#>  1 100259      Sumner-Bonney Lake School Dist~    8988   11048   2060       22.9
+#>  2 100126      Lake Stevens School District       8515   10215   1700       20
+#>  3 100016      Auburn School District            15722   18234   2512       16
+#>  4 100183      Omak School District               5257    6071    814       15.5
+#>  5 100022      Bethel School District            18678   21538   2860       15.3
+#>  6 100263      Tahoma School District             8118    9286   1168       14.4
+#>  7 100127      Lake Washington School District   27293   31146   3853       14.1
+#>  8 100218      Richland School District          12729   14499   1770       13.9
+#>  9 100039      Central Valley School District    13396   15102   1706       12.7
+#> 10 100195      Pasco School District             17182   19001   1819       10.6
 ```
 
 ![Growth chart](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png)
@@ -272,6 +347,14 @@ decade_summary <- enr |>
   ))
 
 decade_summary
+#> # A tibble: 5 x 3
+#>   end_year n_students label
+#>      <dbl>      <dbl> <chr>
+#> 1     2010    2069870 Post-recession
+#> 2     2015    1086314 Tech boom
+#> 3     2019    1137367 Pre-COVID peak
+#> 4     2021    1093331 COVID low
+#> 5     2025    1105384 Current
 ```
 
 ---
@@ -287,6 +370,25 @@ sped_trend <- enr |>
   mutate(pct = round(pct * 100, 1))
 
 sped_trend
+#> # A tibble: 16 x 3
+#>    end_year n_students   pct
+#>       <dbl>      <dbl> <dbl>
+#>  1     2010     272258  13.2
+#>  2     2011     283166  13.5
+#>  3     2012     290354  13.8
+#>  4     2013     293546  13.9
+#>  5     2014     296924  13.9
+#>  6     2015     149314  13.7
+#>  7     2016     153648  14
+#>  8     2017     157984  14.2
+#>  9     2018     163839  14.5
+#> 10     2019     169270  14.9
+#> 11     2020     170961  14.9
+#> 12     2021     158218  14.5
+#> 13     2022     161967  14.8
+#> 14     2023     168599  15.4
+#> 15     2024     176801  16.1
+#> 16     2025     181381  16.4
 ```
 
 ![Special education trends](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/sped-chart-1.png)
@@ -312,6 +414,16 @@ yakima_districts <- enr |>
   arrange(desc(total_enrollment))
 
 yakima_districts
+#> # A tibble: 7 x 5
+#>   district_name            total_enrollment pct_hispanic pct_ell pct_econ_disadv
+#>   <chr>                               <dbl>        <dbl>   <dbl>           <dbl>
+#> 1 Yakima School District              15621         82.1    34.2            86.8
+#> 2 Sunnyside School Distri~             6169         92.9    33.3            87.6
+#> 3 West Valley School Dist~             5570         41.5     9.9            54.9
+#> 4 Toppenish School Distri~             3670         86.9    36.3            89.9
+#> 5 Grandview School Distri~             3586         93.4    32.7            85.5
+#> 6 East Valley School Dist~             3408         58.5    15              65.7
+#> 7 Wapato School District               3225         77.2    50.6            89.9
 ```
 
 ![Yakima Valley demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/yakima-chart-1.png)
@@ -335,6 +447,13 @@ clark_districts <- enr |>
   arrange(desc(growth_2015_2025))
 
 clark_districts
+#> # A tibble: 4 x 5
+#>   district_name                 yr_2015 yr_2020 yr_2025 growth_2015_2025
+#>   <chr>                           <dbl>   <dbl>   <dbl>            <dbl>
+#> 1 Ridgefield School District       2343    3499    4315             84.2
+#> 2 Camas School District            6695    7654    7272              8.6
+#> 3 Battle Ground School District   13589   13365   13080             -3.7
+#> 4 Vancouver School District       23486   23404   21943             -6.6
 ```
 
 ![Clark County growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/clark-county-chart-1.png)
@@ -352,6 +471,25 @@ foster_trend <- enr |>
   mutate(pct = round(pct * 100, 2))
 
 foster_trend
+#> # A tibble: 16 x 3
+#>    end_year n_students   pct
+#>       <dbl>      <dbl> <dbl>
+#>  1     2010      13340  0.64
+#>  2     2011      13430  0.64
+#>  3     2012      12248  0.58
+#>  4     2013      11254  0.53
+#>  5     2014      10904  0.51
+#>  6     2015       5268  0.48
+#>  7     2016       5224  0.47
+#>  8     2017       5873  0.53
+#>  9     2018       6739  0.6
+#> 10     2019       7573  0.67
+#> 11     2020       6812  0.59
+#> 12     2021       5598  0.51
+#> 13     2022       4903  0.45
+#> 14     2023       4112  0.37
+#> 15     2024       3317  0.3
+#> 16     2025       3560  0.32
 ```
 
 ![Foster care by district](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/foster-care-chart-1.png)
@@ -373,6 +511,12 @@ tri_cities_wide <- tri_cities |>
   pivot_wider(names_from = end_year, values_from = n_students, names_prefix = "yr_")
 
 tri_cities_wide
+#> # A tibble: 3 x 5
+#>   district_name             yr_2010 yr_2015 yr_2020 yr_2025
+#>   <chr>                       <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 Kennewick School District   32170   17611   19554   19109
+#> 2 Pasco School District       28946   17182   19226   19001
+#> 3 Richland School District    21930   12729   14295   14499
 ```
 
 ![Tri-Cities growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tri-cities-chart-1.png)
