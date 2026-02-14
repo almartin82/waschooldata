@@ -185,7 +185,26 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_of_peak <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">k_trend</span></span></code></pre></div>
+<span><span class="va">k_trend</span></span>
+<span><span class="co">#&gt; # A tibble: 16 × 3</span></span>
+<span><span class="co">#&gt;    end_year n_students pct_of_peak</span></span>
+<span><span class="co">#&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1     2010      21346        25.9</span></span>
+<span><span class="co">#&gt;  2     2011      19415        23.5</span></span>
+<span><span class="co">#&gt;  3     2012      19799        24</span></span>
+<span><span class="co">#&gt;  4     2013      32700        39.6</span></span>
+<span><span class="co">#&gt;  5     2014      44526        53.9</span></span>
+<span><span class="co">#&gt;  6     2015      52825        64</span></span>
+<span><span class="co">#&gt;  7     2016      70465        85.4</span></span>
+<span><span class="co">#&gt;  8     2017      78060        94.6</span></span>
+<span><span class="co">#&gt;  9     2018      80923        98</span></span>
+<span><span class="co">#&gt; 10     2019      81696        99</span></span>
+<span><span class="co">#&gt; 11     2020      82535       100</span></span>
+<span><span class="co">#&gt; 12     2021      69857        84.6</span></span>
+<span><span class="co">#&gt; 13     2022      78151        94.7</span></span>
+<span><span class="co">#&gt; 14     2023      76987        93.3</span></span>
+<span><span class="co">#&gt; 15     2024      76023        92.1</span></span>
+<span><span class="co">#&gt; 16     2025      71223        86.3</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -200,7 +219,15 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">spokane</span></span></code></pre></div>
+<span><span class="va">spokane</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 2</span></span>
+<span><span class="co">#&gt;   district_name                         n_students</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                                      &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Spokane School District                    29690</span></span>
+<span><span class="co">#&gt; 2 East Valley School District (Spokane)       3655</span></span>
+<span><span class="co">#&gt; 3 West Valley School District (Spokane)       3501</span></span>
+<span><span class="co">#&gt; 4 Spokane International Academy                830</span></span>
+<span><span class="co">#&gt; 5 Innovation Spokane Schools                   235</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -211,7 +238,7 @@
 <code class="sourceCode R"><span><span class="va">district_sizes</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_bucket <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_bucket <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">500</span> <span class="op">~</span> <span class="st">"Small (&lt;500)"</span>,</span>
 <span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">2000</span> <span class="op">~</span> <span class="st">"Medium (500-2K)"</span>,</span>
 <span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">10000</span> <span class="op">~</span> <span class="st">"Large (2K-10K)"</span>,</span>
@@ -219,7 +246,14 @@
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">size_bucket</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">district_sizes</span></span></code></pre></div>
+<span><span class="va">district_sizes</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
+<span><span class="co">#&gt;   size_bucket           n</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;             &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 Large (2K-10K)       81</span></span>
+<span><span class="co">#&gt; 2 Medium (500-2K)      87</span></span>
+<span><span class="co">#&gt; 3 Small (&lt;500)        130</span></span>
+<span><span class="co">#&gt; 4 Very Large (10K+)    32</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -232,7 +266,26 @@
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Tacoma"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tacoma</span></span></code></pre></div>
+<span><span class="va">tacoma</span></span>
+<span><span class="co">#&gt; # A tibble: 16 × 3</span></span>
+<span><span class="co">#&gt;    end_year district_name          n_students</span></span>
+<span><span class="co">#&gt;       &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1     2010 Tacoma School District      59250</span></span>
+<span><span class="co">#&gt;  2     2011 Tacoma School District      59712</span></span>
+<span><span class="co">#&gt;  3     2012 Tacoma School District      59408</span></span>
+<span><span class="co">#&gt;  4     2013 Tacoma School District      60244</span></span>
+<span><span class="co">#&gt;  5     2014 Tacoma School District      60822</span></span>
+<span><span class="co">#&gt;  6     2015 Tacoma School District      30606</span></span>
+<span><span class="co">#&gt;  7     2016 Tacoma School District      30554</span></span>
+<span><span class="co">#&gt;  8     2017 Tacoma School District      30326</span></span>
+<span><span class="co">#&gt;  9     2018 Tacoma School District      30414</span></span>
+<span><span class="co">#&gt; 10     2019 Tacoma School District      30320</span></span>
+<span><span class="co">#&gt; 11     2020 Tacoma School District      30406</span></span>
+<span><span class="co">#&gt; 12     2021 Tacoma School District      28734</span></span>
+<span><span class="co">#&gt; 13     2022 Tacoma School District      28779</span></span>
+<span><span class="co">#&gt; 14     2023 Tacoma School District      28457</span></span>
+<span><span class="co">#&gt; 15     2024 Tacoma School District      28353</span></span>
+<span><span class="co">#&gt; 16     2025 Tacoma School District      29014</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -244,7 +297,7 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2019</span>, <span class="fl">2021</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2010</span> <span class="op">~</span> <span class="st">"Post-recession"</span>,</span>
 <span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2015</span> <span class="op">~</span> <span class="st">"Tech boom"</span>,</span>
 <span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2019</span> <span class="op">~</span> <span class="st">"Pre-COVID peak"</span>,</span>
