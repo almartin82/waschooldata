@@ -144,6 +144,25 @@ k_trend <- enr |>
   mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
 
 k_trend
+#> # A tibble: 16 × 3
+#>    end_year n_students pct_of_peak
+#>       <dbl>      <dbl>       <dbl>
+#>  1     2010      21346        25.9
+#>  2     2011      19415        23.5
+#>  3     2012      19799        24
+#>  4     2013      32700        39.6
+#>  5     2014      44526        53.9
+#>  6     2015      52825        64
+#>  7     2016      70465        85.4
+#>  8     2017      78060        94.6
+#>  9     2018      80923        98
+#> 10     2019      81696        99
+#> 11     2020      82535       100
+#> 12     2021      69857        84.6
+#> 13     2022      78151        94.7
+#> 14     2023      76987        93.3
+#> 15     2024      76023        92.1
+#> 16     2025      71223        86.3
 ```
 
 ---
@@ -161,6 +180,14 @@ spokane <- enr |>
   arrange(desc(n_students))
 
 spokane
+#> # A tibble: 5 × 2
+#>   district_name                         n_students
+#>   <chr>                                      <dbl>
+#> 1 Spokane School District                    29690
+#> 2 East Valley School District (Spokane)       3655
+#> 3 West Valley School District (Spokane)       3501
+#> 4 Spokane International Academy                830
+#> 5 Innovation Spokane Schools                   235
 ```
 
 ---
@@ -182,6 +209,13 @@ district_sizes <- enr |>
   count(size_bucket)
 
 district_sizes
+#> # A tibble: 4 × 2
+#>   size_bucket           n
+#>   <chr>             <int>
+#> 1 Large (2K-10K)       81
+#> 2 Medium (500-2K)      87
+#> 3 Small (<500)        130
+#> 4 Very Large (10K+)    32
 ```
 
 ---
@@ -197,6 +231,25 @@ tacoma <- enr |>
   select(end_year, district_name, n_students)
 
 tacoma
+#> # A tibble: 16 × 3
+#>    end_year district_name          n_students
+#>       <dbl> <chr>                       <dbl>
+#>  1     2010 Tacoma School District      59250
+#>  2     2011 Tacoma School District      59712
+#>  3     2012 Tacoma School District      59408
+#>  4     2013 Tacoma School District      60244
+#>  5     2014 Tacoma School District      60822
+#>  6     2015 Tacoma School District      30606
+#>  7     2016 Tacoma School District      30554
+#>  8     2017 Tacoma School District      30326
+#>  9     2018 Tacoma School District      30414
+#> 10     2019 Tacoma School District      30320
+#> 11     2020 Tacoma School District      30406
+#> 12     2021 Tacoma School District      28734
+#> 13     2022 Tacoma School District      28779
+#> 14     2023 Tacoma School District      28457
+#> 15     2024 Tacoma School District      28353
+#> 16     2025 Tacoma School District      29014
 ```
 
 ---
