@@ -48,6 +48,27 @@ Before opening a PR, verify:
 - [ ] Vignettes render (no `eval=FALSE` hacks)
 ---
 
+## Valid Filter Values (tidy enrollment via `fetch_enr(tidy = TRUE)`)
+
+### subgroup
+`total_enrollment`, `white`, `black`, `hispanic`, `asian`, `native_american`, `pacific_islander`, `multiracial`, `male`, `female`, `gender_x`, `special_ed`, `lep`, `econ_disadv`, `homeless`, `foster_care`, `migrant`, `military_parent`, `section_504`, `highly_capable`, `mobile`
+
+**Washington-specific:** Washington has an unusually rich set of special population subgroups compared to other states. `gender_x` is a non-binary gender category. All subgroups are conditional on their presence in the raw OSPI data.
+
+### grade_level
+`PK`, `K`, `01`-`12`, `TOTAL`
+
+Grade aggregates from `enr_grade_aggs()`: `K8`, `HS`, `K12`, `ELEM` (K-5), `MIDDLE` (6-8)
+
+**Washington-specific:** Washington provides additional grade aggregates beyond the standard K8/HS/K12: `ELEM` (elementary, K-5) and `MIDDLE` (middle school, 6-8). Raw data has separate rows per grade per organization. The `standardize_grade_level()` function normalizes various formats (e.g., `"Pre-Kindergarten"`, `"1st Grade"`, `"Grade 1"`) to standard codes.
+
+### entity flags
+`is_state`, `is_district`, `is_campus`
+
+Determined by the `type` column: `"State"`, `"District"`, `"Campus"` (or `"School"`). No charter flag in Washington tidy enrollment.
+
+---
+
 ## README Images from Vignettes (REQUIRED)
 
 **NEVER use `man/figures/` or `generate_readme_figs.R` for README images.**
