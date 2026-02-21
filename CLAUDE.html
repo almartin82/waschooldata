@@ -86,6 +86,25 @@
 </div>
 </div>
 <div class="section level2">
+<h2 id="valid-filter-values-tidy-enrollment-via-fetch_enrtidy--true">Valid Filter Values (tidy enrollment via <code>fetch_enr(tidy = TRUE)</code>)<a class="anchor" aria-label="anchor" href="#valid-filter-values-tidy-enrollment-via-fetch_enrtidy--true"></a></h2>
+<div class="section level3">
+<h3 id="subgroup">subgroup<a class="anchor" aria-label="anchor" href="#subgroup"></a></h3>
+<p><code>total_enrollment</code>, <code>white</code>, <code>black</code>, <code>hispanic</code>, <code>asian</code>, <code>native_american</code>, <code>pacific_islander</code>, <code>multiracial</code>, <code>male</code>, <code>female</code>, <code>gender_x</code>, <code>special_ed</code>, <code>lep</code>, <code>econ_disadv</code>, <code>homeless</code>, <code>foster_care</code>, <code>migrant</code>, <code>military_parent</code>, <code>section_504</code>, <code>highly_capable</code>, <code>mobile</code></p>
+<p><strong>Washington-specific:</strong> Washington has an unusually rich set of special population subgroups compared to other states. <code>gender_x</code> is a non-binary gender category. All subgroups are conditional on their presence in the raw OSPI data.</p>
+</div>
+<div class="section level3">
+<h3 id="grade_level">grade_level<a class="anchor" aria-label="anchor" href="#grade_level"></a></h3>
+<p><code>PK</code>, <code>K</code>, <code>01</code>-<code>12</code>, <code>TOTAL</code></p>
+<p>Grade aggregates from <code><a href="reference/enr_grade_aggs.html">enr_grade_aggs()</a></code>: <code>K8</code>, <code>HS</code>, <code>K12</code>, <code>ELEM</code> (K-5), <code>MIDDLE</code> (6-8)</p>
+<p><strong>Washington-specific:</strong> Washington provides additional grade aggregates beyond the standard K8/HS/K12: <code>ELEM</code> (elementary, K-5) and <code>MIDDLE</code> (middle school, 6-8). Raw data has separate rows per grade per organization. The <code><a href="reference/standardize_grade_level.html">standardize_grade_level()</a></code> function normalizes various formats (e.g., <code>"Pre-Kindergarten"</code>, <code>"1st Grade"</code>, <code>"Grade 1"</code>) to standard codes.</p>
+</div>
+<div class="section level3">
+<h3 id="entity-flags">entity flags<a class="anchor" aria-label="anchor" href="#entity-flags"></a></h3>
+<p><code>is_state</code>, <code>is_district</code>, <code>is_campus</code></p>
+<p>Determined by the <code>type</code> column: <code>"State"</code>, <code>"District"</code>, <code>"Campus"</code> (or <code>"School"</code>). No charter flag in Washington tidy enrollment.</p>
+<hr></div>
+</div>
+<div class="section level2">
 <h2 id="readme-images-from-vignettes-required">README Images from Vignettes (REQUIRED)<a class="anchor" aria-label="anchor" href="#readme-images-from-vignettes-required"></a></h2>
 <p><strong>NEVER use <code>man/figures/</code> or <code>generate_readme_figs.R</code> for README images.</strong></p>
 <p>README images MUST come from pkgdown-generated vignette output so they auto-update on merge:</p>
