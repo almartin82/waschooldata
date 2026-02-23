@@ -240,7 +240,11 @@ standardize_grade_level <- function(grades) {
     "Grade 11" = "11",
     "12th Grade" = "12",
     "Grade 12" = "12",
-    "All Grades" = "TOTAL"
+    "All Grades" = "TOTAL",
+    "AllGrades" = "TOTAL",
+    "Half-day Kindergarten" = "K",
+    "Half Day Kindergarten" = "K",
+    "Full-day Kindergarten" = "K"
   )
 
   result <- grades

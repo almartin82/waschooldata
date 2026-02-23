@@ -32,9 +32,9 @@ This vignette explores Washington's public school enrollment data, surfacing key
 
 ---
 
-## 1. Washington enrollment peaked in 2020, then COVID hit
+## 1. Washington added 70,000 students over 16 years before COVID reversed the trend
 
-The Evergreen State added students for a decade, reaching over 1.1 million before pandemic disruption.
+The Evergreen State grew enrollment steadily from 1.03 million to nearly 1.15 million before the pandemic wiped out years of gains.
 
 ```{r statewide-data}
 enr <- fetch_enr_multi(2010:2025, use_cache = TRUE)
@@ -44,16 +44,19 @@ state_totals <- enr |>
   select(end_year, n_students) |>
   mutate(change = n_students - lag(n_students),
          pct_change = round(change / lag(n_students) * 100, 2))
+stopifnot(nrow(state_totals) > 0)
 
 state_totals
 ```
 
 ```{r statewide-chart}
+print(state_totals)
+
 ggplot(state_totals, aes(x = end_year, y = n_students)) +
   geom_line(linewidth = 1.2, color = "#4B2E83") +
   geom_point(size = 3, color = "#4B2E83") +
-  geom_vline(xintercept = 2020, linetype = "dashed", color = "red", alpha = 0.5) +
-  annotate("text", x = 2020.5, y = max(state_totals$n_students, na.rm = TRUE),
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(state_totals$n_students, na.rm = TRUE),
            label = "COVID", hjust = 0, color = "red", size = 3) +
   scale_y_continuous(labels = scales::comma) +
   labs(
@@ -66,17 +69,17 @@ ggplot(state_totals, aes(x = end_year, y = n_students)) +
 
 ---
 
-## 2. Seattle Public Schools has been shrinking for years
+## 2. Seattle peaked at 56,000 students then lost 9% in five years
 
-Washington's largest district has lost students steadily, even as tech industry growth transformed the region.
+Washington's largest district peaked in 2020 and has lost nearly 5,000 students since, even as tech industry growth transformed the region.
 
 ```{r top-districts-data}
-# Find Seattle district
 seattle <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Seattle", district_name, ignore.case = TRUE)) |>
   select(end_year, district_name, n_students) |>
   mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
+stopifnot(nrow(seattle) > 0)
 
 seattle
 ```
@@ -88,17 +91,23 @@ top_districts <- enr |>
   arrange(desc(n_students)) |>
   head(5) |>
   pull(district_id)
+stopifnot(length(top_districts) > 0)
 
-enr |>
+top5_data <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         district_id %in% top_districts) |>
-  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
+         district_id %in% top_districts)
+stopifnot(nrow(top5_data) > 0)
+
+print(top5_data |> filter(end_year == 2025) |> select(district_name, n_students))
+
+ggplot(top5_data, aes(x = end_year, y = n_students, color = district_name)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
   scale_y_continuous(labels = scales::comma) +
   labs(
     title = "Washington's Top 5 Districts: Enrollment Trends",
-    subtitle = "Seattle shrinks while Spokane and suburban districts hold steady",
+    subtitle = "Seattle peaked in 2020 while suburban districts continue growing",
     x = "School Year",
     y = "Enrollment",
     color = "District"
@@ -109,9 +118,9 @@ enr |>
 
 ---
 
-## 3. Washington is one of the most diverse states in the nation
+## 3. White students dropped from 64% to 48% as Hispanic enrollment nearly doubled
 
-The state's demographics reflect Pacific Rim immigration and a growing Hispanic population.
+The state's demographics reflect Pacific Rim immigration and a growing Hispanic population that rose from 167K to 295K students.
 
 ```{r demographics-data}
 demographics <- enr |>
@@ -120,16 +129,21 @@ demographics <- enr |>
          end_year %in% c(2010, 2015, 2020, 2025)) |>
   select(end_year, subgroup, n_students, pct) |>
   mutate(pct = round(pct * 100, 1))
+stopifnot(nrow(demographics) > 0)
 
 demographics |>
   pivot_wider(names_from = end_year, values_from = c(n_students, pct))
 ```
 
 ```{r demographics-chart}
-enr |>
+demo_trend <- enr |>
   filter(is_state, grade_level == "TOTAL",
-         subgroup %in% c("white", "hispanic", "asian", "black", "multiracial")) |>
-  ggplot(aes(x = end_year, y = pct * 100, color = subgroup)) +
+         subgroup %in% c("white", "hispanic", "asian", "black", "multiracial"))
+stopifnot(nrow(demo_trend) > 0)
+
+print(demo_trend |> filter(end_year == 2025) |> select(subgroup, n_students, pct))
+
+ggplot(demo_trend, aes(x = end_year, y = pct * 100, color = subgroup)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2) +
   scale_y_continuous(labels = function(x) paste0(x, "%")) +
@@ -147,12 +161,11 @@ enr |>
 
 ---
 
-## 4. Puget Sound vs. Eastern Washington: two different states
+## 4. Puget Sound holds 427K students -- nearly 4x Eastern Washington
 
 The I-5 corridor dominates enrollment, but Eastern Washington's districts face different challenges.
 
 ```{r regional-data}
-# Group by ESD (Educational Service District) to show regional patterns
 esd_enrollment <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          end_year == 2025, !is.na(esd_name)) |>
@@ -163,67 +176,63 @@ esd_enrollment <- enr |>
     .groups = "drop"
   ) |>
   arrange(desc(students))
+stopifnot(nrow(esd_enrollment) > 0)
 
 esd_enrollment
 ```
 
 ```{r regional-chart}
+print(esd_enrollment)
+
 esd_enrollment |>
-  mutate(region = case_when(
-    grepl("Puget Sound", esd_name, ignore.case = TRUE) ~ "Puget Sound",
-    grepl("Seattle|King", esd_name, ignore.case = TRUE) ~ "Puget Sound",
-    grepl("Pierce|Tacoma", esd_name, ignore.case = TRUE) ~ "Puget Sound",
-    grepl("Spokane", esd_name, ignore.case = TRUE) ~ "Eastern WA",
-    grepl("ESD 101|ESD 105|ESD 123", esd_name) ~ "Eastern WA",
-    TRUE ~ "Other"
-  )) |>
-  group_by(region) |>
-  summarize(students = sum(students), .groups = "drop") |>
-  ggplot(aes(x = reorder(region, students), y = students, fill = region)) +
+  mutate(esd_short = gsub("Educational Service District|ESD", "ESD", esd_name)) |>
+  mutate(esd_short = forcats::fct_reorder(esd_short, students)) |>
+  ggplot(aes(x = students, y = esd_short, fill = students)) +
   geom_col(show.legend = FALSE) +
-  geom_text(aes(label = scales::comma(students)), hjust = -0.1) +
-  coord_flip() +
-  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
-  scale_fill_manual(values = c("Puget Sound" = "#4B2E83", "Eastern WA" = "#E8E3D3", "Other" = "#85754D")) +
+  geom_text(aes(label = scales::comma(students)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.2))) +
+  scale_fill_gradient(low = "#E8E3D3", high = "#4B2E83") +
   labs(
-    title = "Washington Enrollment by Region",
-    subtitle = "Puget Sound dominates the state's student population",
-    x = NULL,
-    y = "Total Students"
+    title = "Washington Enrollment by Educational Service District",
+    subtitle = "Puget Sound ESD 121 dominates with 427K students",
+    x = "Total Students",
+    y = NULL
   )
 ```
 
 ---
 
-## 5. Tech corridor suburbs are booming
+## 5. Suburban districts are booming: Sumner-Bonney Lake up 23% since 2015
 
-Districts in the Seattle-Bellevue-Redmond tech corridor have seen growth even as Seattle itself declines.
+The fastest-growing large districts are spread across the state, from Sumner-Bonney Lake south of Seattle to Central Valley near Spokane.
 
 ```{r growth-data}
-# Calculate growth rates for districts with significant enrollment
 growth_rates <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          end_year %in% c(2015, 2025)) |>
   select(district_id, district_name, end_year, n_students) |>
   pivot_wider(names_from = end_year, values_from = n_students, names_prefix = "yr_") |>
-  filter(yr_2015 > 5000) |>  # Focus on larger districts
+  filter(yr_2015 > 5000) |>
   mutate(
     change = yr_2025 - yr_2015,
     pct_change = round((yr_2025 - yr_2015) / yr_2015 * 100, 1)
   ) |>
   arrange(desc(pct_change))
+stopifnot(nrow(growth_rates) > 0)
 
 head(growth_rates, 10)
 ```
 
 ```{r growth-chart}
-growth_rates |>
-  head(10) |>
+growth_top10 <- head(growth_rates, 10)
+print(growth_top10)
+
+growth_top10 |>
   mutate(district_name = forcats::fct_reorder(district_name, pct_change)) |>
   ggplot(aes(x = pct_change, y = district_name, fill = pct_change > 0)) +
   geom_col(show.legend = FALSE) +
-  geom_text(aes(label = paste0(ifelse(pct_change > 0, "+", ""), pct_change, "%")),
-            hjust = ifelse(growth_rates$pct_change[1:10] > 0, -0.1, 1.1), size = 3) +
+  geom_text(aes(label = paste0("+", pct_change, "%")),
+            hjust = -0.1, size = 3) +
   scale_x_continuous(expand = expansion(mult = c(0.1, 0.15))) +
   scale_fill_manual(values = c("TRUE" = "#4B2E83", "FALSE" = "#C4A055")) +
   labs(
@@ -236,7 +245,7 @@ growth_rates |>
 
 ---
 
-## 6. The kindergarten cliff is real
+## 6. The kindergarten cliff is real: K enrollment down 14% from 2020 peak
 
 Washington's kindergarten enrollment dropped during COVID and hasn't recovered, signaling smaller cohorts ahead.
 
@@ -245,34 +254,77 @@ k_trend <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "K") |>
   select(end_year, n_students) |>
   mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
+stopifnot(nrow(k_trend) > 0)
 
 k_trend
 ```
 
+```{r k-chart}
+print(k_trend)
+
+ggplot(k_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.2, color = "#4B2E83") +
+  geom_point(size = 3, color = "#4B2E83") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(k_trend$n_students, na.rm = TRUE),
+           label = "COVID", hjust = 0, color = "red", size = 3) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Washington Kindergarten Enrollment (2010-2025)",
+    subtitle = "COVID-era losses persist: 71K in 2025 vs 83K peak in 2020",
+    x = "School Year (ending)",
+    y = "Kindergarten Enrollment"
+  )
+```
+
 ---
 
-## 7. Spokane is Eastern Washington's anchor
+## 7. Spokane anchors Eastern Washington with nearly 30,000 students
 
-Spokane Public Schools serves over 30,000 students, making it the largest district east of the Cascades.
+Spokane Public Schools serves 29,690 students, making it the largest district east of the Cascades and the state's second-largest overall.
 
-```{r spokane}
+```{r spokane-data}
 spokane <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Spokane", district_name, ignore.case = TRUE),
          end_year == 2025) |>
   select(district_name, n_students) |>
   arrange(desc(n_students))
+stopifnot(nrow(spokane) > 0)
 
 spokane
 ```
 
+```{r spokane-chart}
+spokane_trend <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("^Spokane School District$", district_name))
+stopifnot(nrow(spokane_trend) > 0)
+
+print(spokane_trend |> select(end_year, n_students))
+
+ggplot(spokane_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.2, color = "#4B2E83") +
+  geom_point(size = 3, color = "#4B2E83") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(spokane_trend$n_students, na.rm = TRUE),
+           label = "COVID", hjust = 0, color = "red", size = 3) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Spokane School District Enrollment (2010-2025)",
+    subtitle = "Eastern Washington's anchor district holding near 30K",
+    x = "School Year (ending)",
+    y = "Total Enrollment"
+  )
+```
+
 ---
 
-## 8. Rural districts face consolidation pressure
+## 8. 130 districts have fewer than 500 students
 
-Dozens of Washington districts have fewer than 500 students, challenging their long-term viability.
+Nearly 40% of Washington's districts serve fewer than 500 students, challenging their long-term viability.
 
-```{r small-districts}
+```{r small-districts-data}
 district_sizes <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          end_year == 2025) |>
@@ -283,30 +335,69 @@ district_sizes <- enr |>
     TRUE ~ "Very Large (10K+)"
   )) |>
   count(size_bucket)
+stopifnot(nrow(district_sizes) > 0)
 
 district_sizes
 ```
 
----
+```{r small-districts-chart}
+print(district_sizes)
 
-## 9. Tacoma is holding steady
-
-The state's third-largest city has maintained stable enrollment while Seattle has declined.
-
-```{r tacoma}
-tacoma <- enr |>
-  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         grepl("Tacoma", district_name, ignore.case = TRUE)) |>
-  select(end_year, district_name, n_students)
-
-tacoma
+district_sizes |>
+  mutate(size_bucket = factor(size_bucket,
+    levels = c("Small (<500)", "Medium (500-2K)", "Large (2K-10K)", "Very Large (10K+)"))) |>
+  ggplot(aes(x = size_bucket, y = n, fill = size_bucket)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = n), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("#E8E3D3", "#C4A055", "#85754D", "#4B2E83")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(
+    title = "Washington Districts by Size (2025)",
+    subtitle = "130 small districts serve fewer than 500 students each",
+    x = "District Size",
+    y = "Number of Districts"
+  )
 ```
 
 ---
 
-## 10. 16 years of data capture major shifts
+## 9. Tacoma held steady at ~30K for a decade before COVID
 
-Washington's enrollment data spans 2010-2025, documenting the Amazon/Microsoft boom, pandemic disruption, and demographic transformation.
+The state's third-largest city maintained remarkably stable enrollment from 2010 to 2020 before losing 2,000 students.
+
+```{r tacoma-data}
+tacoma <- enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
+         grepl("Tacoma", district_name, ignore.case = TRUE)) |>
+  select(end_year, district_name, n_students)
+stopifnot(nrow(tacoma) > 0)
+
+tacoma
+```
+
+```{r tacoma-chart}
+print(tacoma)
+
+ggplot(tacoma, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.2, color = "#4B2E83") +
+  geom_point(size = 3, color = "#4B2E83") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(tacoma$n_students, na.rm = TRUE),
+           label = "COVID", hjust = 0, color = "red", size = 3) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title = "Tacoma School District Enrollment (2010-2025)",
+    subtitle = "Remarkably stable for a decade, then COVID disruption",
+    x = "School Year (ending)",
+    y = "Total Enrollment"
+  )
+```
+
+---
+
+## 10. From 1.03M to 1.1M: 16 years of enrollment milestones
+
+Washington's enrollment data spans 2010-2025, documenting the tech boom, pandemic disruption, and demographic transformation.
 
 ```{r summary-table}
 decade_summary <- enr |>
@@ -320,48 +411,57 @@ decade_summary <- enr |>
     end_year == 2021 ~ "COVID low",
     end_year == 2025 ~ "Current"
   ))
+stopifnot(nrow(decade_summary) > 0)
 
 decade_summary
 ```
 
+```{r summary-chart}
+print(decade_summary)
+
+ggplot(decade_summary, aes(x = end_year, y = n_students)) +
+  geom_col(fill = "#4B2E83", width = 2) +
+  geom_text(aes(label = paste0(label, "\n", scales::comma(n_students))),
+            vjust = -0.3, size = 3) +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Washington Enrollment Milestones",
+    subtitle = "Key years from post-recession through COVID recovery",
+    x = "School Year (ending)",
+    y = "Total Enrollment"
+  )
+```
+
 ---
 
-## Summary
+## 11. 1 in 6 Washington students now receives special education services
 
-Washington's school enrollment data reveals:
-
-- **Tech corridor paradox**: Seattle shrinks while suburban Eastside districts grow
-- **Demographic diversity**: One of the nation's most diverse student populations
-- **Regional divide**: Puget Sound vs. Eastern Washington face different challenges
-- **Kindergarten cliff**: COVID-era enrollment drops rippling through the system
-- **Rural pressure**: Many small districts below sustainable enrollment levels
-
-These patterns shape school funding, facility planning, and staffing decisions across the Evergreen State.
-
----
-
-## 11. Special Education enrollment continues climbing
-
-Nearly 1 in 7 Washington students now receives special education services, a rate that has grown steadily for years.
+Special education identification rose from 13.2% to 16.4% over 16 years, with the rate accelerating since 2022.
 
 ```{r sped-data}
 sped_trend <- enr |>
   filter(is_state, grade_level == "TOTAL", subgroup == "special_ed") |>
   select(end_year, n_students, pct) |>
   mutate(pct = round(pct * 100, 1))
+stopifnot(nrow(sped_trend) > 0)
 
 sped_trend
 ```
 
 ```{r sped-chart}
+print(sped_trend)
+
 ggplot(sped_trend, aes(x = end_year, y = pct)) +
   geom_line(linewidth = 1.2, color = "#4B2E83") +
   geom_point(size = 3, color = "#4B2E83") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(sped_trend$pct, na.rm = TRUE),
+           label = "COVID", hjust = 0, color = "red", size = 3) +
   scale_y_continuous(labels = function(x) paste0(x, "%"),
                      limits = c(0, NA)) +
   labs(
     title = "Special Education Students as Share of Enrollment",
-    subtitle = "Washington state, 2010-2025",
+    subtitle = "Washington state, 2010-2025 -- rate accelerating since 2022",
     x = "School Year",
     y = "Percent of Students"
   )
@@ -369,9 +469,9 @@ ggplot(sped_trend, aes(x = end_year, y = pct)) +
 
 ---
 
-## 12. The Yakima Valley's agricultural communities
+## 12. Yakima Valley: where 93% of students are Hispanic and half are English learners
 
-Central Washington's agricultural heartland has high concentrations of English learners and economically disadvantaged students.
+Central Washington's agricultural heartland has the state's highest concentrations of English learners and economically disadvantaged students.
 
 ```{r yakima-data}
 yakima_districts <- enr |>
@@ -386,6 +486,7 @@ yakima_districts <- enr |>
   ) |>
   select(district_name, total_enrollment, pct_hispanic, pct_ell, pct_econ_disadv) |>
   arrange(desc(total_enrollment))
+stopifnot(nrow(yakima_districts) > 0)
 
 yakima_districts
 ```
@@ -402,6 +503,9 @@ yakima_long <- enr |>
            subgroup == "lep" ~ "English Learner",
            subgroup == "econ_disadv" ~ "Economically Disadvantaged"
          ))
+stopifnot(nrow(yakima_long) > 0)
+
+print(yakima_long)
 
 ggplot(yakima_long, aes(x = reorder(district_name, -pct), y = pct, fill = subgroup)) +
   geom_col(position = "dodge") +
@@ -419,9 +523,9 @@ ggplot(yakima_long, aes(x = reorder(district_name, -pct), y = pct, fill = subgro
 
 ---
 
-## 13. Vancouver and Clark County's explosive growth
+## 13. Ridgefield grew 84% while Vancouver lost 7% -- Clark County's diverging paths
 
-The Portland metro spillover has made Clark County one of Washington's fastest-growing regions.
+The Portland metro spillover has reshaped Clark County, with small suburban districts booming while the urban core declines.
 
 ```{r clark-county-data}
 clark_districts <- enr |>
@@ -434,22 +538,28 @@ clark_districts <- enr |>
     growth_2015_2025 = round((yr_2025 - yr_2015) / yr_2015 * 100, 1)
   ) |>
   arrange(desc(growth_2015_2025))
+stopifnot(nrow(clark_districts) > 0)
 
 clark_districts
 ```
 
 ```{r clark-county-chart}
-enr |>
+clark_trend <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
-         grepl("Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield", district_name)) |>
-  ggplot(aes(x = end_year, y = n_students, color = district_name)) +
+         grepl("Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield", district_name))
+stopifnot(nrow(clark_trend) > 0)
+
+print(clark_trend |> filter(end_year == 2025) |> select(district_name, n_students))
+
+ggplot(clark_trend, aes(x = end_year, y = n_students, color = district_name)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
   scale_y_continuous(labels = scales::comma) +
   scale_color_brewer(palette = "Set1") +
   labs(
     title = "Clark County District Enrollment Trends",
-    subtitle = "Vancouver suburb growth driven by Portland metro expansion",
+    subtitle = "Ridgefield booming while Vancouver declines",
     x = "School Year",
     y = "Enrollment",
     color = "District"
@@ -460,53 +570,50 @@ enr |>
 
 ---
 
-## 14. Foster care students: an invisible population
+## 14. Foster care enrollment dropped 53% from 2019 peak
 
-Washington tracks foster care enrollment, revealing a vulnerable population of over 10,000 students.
+Washington tracks foster care enrollment at every school, revealing the population peaked at 7,573 in 2019 and has since dropped to 3,560.
 
 ```{r foster-care-data}
 foster_trend <- enr |>
   filter(is_state, grade_level == "TOTAL", subgroup == "foster_care") |>
   select(end_year, n_students, pct) |>
   mutate(pct = round(pct * 100, 2))
+stopifnot(nrow(foster_trend) > 0)
 
 foster_trend
 ```
 
 ```{r foster-care-chart}
-# Find districts with highest foster care concentrations
-foster_districts <- enr |>
-  filter(is_district, grade_level == "TOTAL", subgroup == "foster_care",
-         end_year == 2025, n_students >= 100) |>
-  arrange(desc(pct)) |>
-  head(10) |>
-  select(district_name, n_students, pct) |>
-  mutate(pct = pct * 100)
+print(foster_trend)
 
-ggplot(foster_districts, aes(x = reorder(district_name, pct), y = pct)) +
-  geom_col(fill = "#4B2E83") +
-  geom_text(aes(label = paste0(round(pct, 1), "%")), hjust = -0.1, size = 3) +
-  coord_flip() +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+ggplot(foster_trend, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.2, color = "#4B2E83") +
+  geom_point(size = 3, color = "#4B2E83") +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
+  annotate("text", x = 2020.8, y = max(foster_trend$n_students, na.rm = TRUE),
+           label = "COVID", hjust = 0, color = "red", size = 3) +
+  scale_y_continuous(labels = scales::comma) +
   labs(
-    title = "Districts with Highest Foster Care Rates",
-    subtitle = "Among districts with 100+ foster care students (2025)",
-    x = NULL,
-    y = "Percent of Students in Foster Care"
+    title = "Foster Care Students in Washington Schools",
+    subtitle = "Peaked at 7,573 in 2019, now down to 3,560",
+    x = "School Year (ending)",
+    y = "Foster Care Students"
   )
 ```
 
 ---
 
-## 15. The Tri-Cities boom: Richland, Kennewick, and Pasco
+## 15. The Tri-Cities boom: Pasco grew 31% while Kennewick and Richland added 19% and 32%
 
-The Tri-Cities in southeastern Washington have seen population growth driven by the Hanford cleanup and tech sector expansion.
+The Tri-Cities in southeastern Washington have seen sustained population growth driven by Hanford cleanup and agricultural expansion.
 
 ```{r tri-cities-data}
 tri_cities <- enr |>
   filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL",
          grepl("Richland|Kennewick|Pasco", district_name)) |>
   select(end_year, district_name, n_students)
+stopifnot(nrow(tri_cities) > 0)
 
 tri_cities_wide <- tri_cities |>
   filter(end_year %in% c(2010, 2015, 2020, 2025)) |>
@@ -516,9 +623,12 @@ tri_cities_wide
 ```
 
 ```{r tri-cities-chart}
+print(tri_cities_wide)
+
 ggplot(tri_cities, aes(x = end_year, y = n_students, color = district_name)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2) +
+  geom_vline(xintercept = 2020.5, linetype = "dashed", color = "red", alpha = 0.5) +
   scale_y_continuous(labels = scales::comma) +
   scale_color_manual(values = c("Kennewick School District" = "#4B2E83",
                                 "Pasco School District" = "#C4A055",
@@ -526,7 +636,7 @@ ggplot(tri_cities, aes(x = end_year, y = n_students, color = district_name)) +
                      labels = function(x) gsub(" School District", "", x)) +
   labs(
     title = "Tri-Cities Enrollment Growth",
-    subtitle = "Southeastern Washington's boom region",
+    subtitle = "Southeastern Washington's sustained growth region",
     x = "School Year",
     y = "Enrollment",
     color = "District"
@@ -540,16 +650,16 @@ ggplot(tri_cities, aes(x = end_year, y = n_students, color = district_name)) +
 
 Washington's school enrollment data reveals:
 
-- **Tech corridor paradox**: Seattle shrinks while suburban Eastside districts grow
-- **Demographic diversity**: One of the nation's most diverse student populations
-- **Regional divide**: Puget Sound vs. Eastern Washington face different challenges
-- **Kindergarten cliff**: COVID-era enrollment drops rippling through the system
-- **Rural pressure**: Many small districts below sustainable enrollment levels
-- **Special education growth**: Rising identification rates across all districts
-- **Agricultural communities**: Yakima Valley's unique demographic profile
-- **Southwest boom**: Clark County absorbing Portland metro growth
-- **Vulnerable populations**: Foster care and homeless students tracked statewide
-- **Tri-Cities expansion**: Southeastern Washington's continued growth
+- **Steady growth**: 1.03M to 1.15M students over a decade before COVID
+- **Seattle paradox**: The largest district lost 9% while suburban districts boomed
+- **Demographic transformation**: White students dropped from 64% to 48%, Hispanic nearly doubled
+- **Kindergarten cliff**: K enrollment down 14% from peak, signaling smaller future cohorts
+- **Rural pressure**: 130 districts serve fewer than 500 students each
+- **Special education growth**: Rising from 13% to 16% of all students
+- **Agricultural communities**: Yakima Valley districts are 80-93% Hispanic
+- **Clark County divergence**: Ridgefield up 84%, Vancouver down 7%
+- **Foster care decline**: Peaked at 7,573 in 2019, now down 53%
+- **Tri-Cities expansion**: All three districts grew 19-32% since 2010
 
 These patterns shape school funding, facility planning, and staffing decisions across the Evergreen State.
 
