@@ -56,99 +56,24 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong><a href="https://almartin82.github.io/waschooldata/">Documentation</a></strong> | <a href="https://github.com/almartin82/waschooldata" class="external-link">GitHub</a></p>
+<p>Washington educates <strong>1.1 million students</strong> across 295 school districts, from the tech corridors of Seattle to the wheat fields of the Palouse. This package gives you 16 years of enrollment data (2010-2025) for every school, district, and the state – race, gender, grade level, special populations, and more – via the OSPI data.wa.gov API.</p>
+<p>Part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a> family of state education data packages.</p>
+<p><strong><a href="https://almartin82.github.io/waschooldata/">Full documentation</a></strong> – all 15 stories with interactive charts, getting-started guide, and complete function reference.</p>
 <div class="section level2">
-<h2 id="about-this-package">About This Package<a class="anchor" aria-label="anchor" href="#about-this-package"></a>
+<h2 id="highlights">Highlights<a class="anchor" aria-label="anchor" href="#highlights"></a>
 </h2>
-<p>waschooldata is part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">state schooldata project</a>, a family of R packages that provide consistent, tidy access to state-level education data. The mothership package, <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a>, covers New Jersey; this package extends the same approach to Washington state.</p>
-<p>Fetch and analyze Washington school enrollment data from <a href="https://data.wa.gov/" class="external-link">OSPI</a> in R or Python. <strong>16 years of data</strong> (2010-2025) for every school, district, and the state via the data.wa.gov Socrata API.</p>
-</div>
-<div class="section level2">
-<h2 id="what-can-you-find-with-waschooldata">What can you find with waschooldata?<a class="anchor" aria-label="anchor" href="#what-can-you-find-with-waschooldata"></a>
-</h2>
-<p>Washington educates <strong>1.1 million students</strong> across 295 school districts, from the tech corridors of Seattle to the wheat fields of the Palouse. Here are fifteen stories hiding in the data:</p>
-<hr>
-<div class="section level3">
-<h3 id="id_1-washington-added-70000-students-over-16-years-before-covid-reversed-the-trend">1. Washington added 70,000 students over 16 years before COVID reversed the trend<a class="anchor" aria-label="anchor" href="#id_1-washington-added-70000-students-over-16-years-before-covid-reversed-the-trend"></a>
-</h3>
-<p>The Evergreen State grew enrollment steadily from 1.03 million to nearly 1.15 million before the pandemic wiped out years of gains.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/waschooldata/">waschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2010</span><span class="op">:</span><span class="fl">2025</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">state_totals</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>change <span class="op">=</span> <span class="va">n_students</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span>,</span>
-<span>         pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">change</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">state_totals</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">state_totals</span></span>
-<span><span class="co">#&gt;    end_year n_students change pct_change</span></span>
-<span><span class="co">#&gt; 1      2010    1034935     NA         NA</span></span>
-<span><span class="co">#&gt; 2      2011    1045333  10398       1.00</span></span>
-<span><span class="co">#&gt; 3      2012    1051404   6071       0.58</span></span>
-<span><span class="co">#&gt; 4      2013    1058680   7276       0.69</span></span>
-<span><span class="co">#&gt; 5      2014    1068234   9554       0.90</span></span>
-<span><span class="co">#&gt; 6      2015    1086314  18080       1.69</span></span>
-<span><span class="co">#&gt; 7      2016    1100849  14535       1.34</span></span>
-<span><span class="co">#&gt; 8      2017    1115820  14971       1.36</span></span>
-<span><span class="co">#&gt; 9      2018    1130714  14894       1.33</span></span>
-<span><span class="co">#&gt; 10     2019    1137367   6653       0.59</span></span>
-<span><span class="co">#&gt; 11     2020    1146882   9515       0.84</span></span>
-<span><span class="co">#&gt; 12     2021    1093331 -53551      -4.67</span></span>
-<span><span class="co">#&gt; 13     2022    1091343  -1988      -0.18</span></span>
-<span><span class="co">#&gt; 14     2023    1096695   5352       0.49</span></span>
-<span><span class="co">#&gt; 15     2024    1100059   3364       0.31</span></span>
-<span><span class="co">#&gt; 16     2025    1105384   5325       0.48</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png" alt="Statewide enrollment"><div class="figcaption">Statewide enrollment</div>
-</div>
+<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2010</span><span class="op">:</span><span class="fl">2025</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <hr>
-</div>
 <div class="section level3">
-<h3 id="id_2-seattle-peaked-at-56000-students-then-lost-9-in-five-years">2. Seattle peaked at 56,000 students then lost 9% in five years<a class="anchor" aria-label="anchor" href="#id_2-seattle-peaked-at-56000-students-then-lost-9-in-five-years"></a>
-</h3>
-<p>Washington’s largest district peaked in 2020 and has lost nearly 5,000 students since, even as tech industry growth transformed the region.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seattle</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Seattle"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_of_peak <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">seattle</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">seattle</span></span>
-<span><span class="co">#&gt;    end_year                 district_name n_students pct_of_peak</span></span>
-<span><span class="co">#&gt; 1      2010 Seattle School District No. 1      47058        84.0</span></span>
-<span><span class="co">#&gt; 2      2011 Seattle School District No. 1      48299        86.2</span></span>
-<span><span class="co">#&gt; 3      2012 Seattle School District No. 1      49851        88.9</span></span>
-<span><span class="co">#&gt; 4      2013 Seattle School District No. 1      51201        91.3</span></span>
-<span><span class="co">#&gt; 5      2014 Seattle School District No. 1      52181        93.1</span></span>
-<span><span class="co">#&gt; 6      2015 Seattle School District No. 1      53361        95.2</span></span>
-<span><span class="co">#&gt; 7      2016 Seattle School District No. 1      53767        95.9</span></span>
-<span><span class="co">#&gt; 8      2017 Seattle School District No. 1      54722        97.6</span></span>
-<span><span class="co">#&gt; 9      2018 Seattle School District No. 1      55321        98.7</span></span>
-<span><span class="co">#&gt; 10     2019 Seattle School District No. 1      55325        98.7</span></span>
-<span><span class="co">#&gt; 11     2020 Seattle School District No. 1      56051       100.0</span></span>
-<span><span class="co">#&gt; 12     2021 Seattle School District No. 1      54021        96.4</span></span>
-<span><span class="co">#&gt; 13     2022 Seattle School District No. 1      51653        92.2</span></span>
-<span><span class="co">#&gt; 14     2023 Seattle School District No. 1      51528        91.9</span></span>
-<span><span class="co">#&gt; 15     2024 Seattle School District No. 1      50968        90.9</span></span>
-<span><span class="co">#&gt; 16     2025 Seattle School District No. 1      51200        91.3</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png" alt="Top districts"><div class="figcaption">Top districts</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_3-white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled">3. White students dropped from 64% to 48% as Hispanic enrollment nearly doubled<a class="anchor" aria-label="anchor" href="#id_3-white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled"></a>
+<h3 id="id_1-white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled">1. White students dropped from 64% to 48% as Hispanic enrollment nearly doubled<a class="anchor" aria-label="anchor" href="#id_1-white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled"></a>
 </h3>
 <p>The state’s demographics reflect Pacific Rim immigration and a growing Hispanic population that rose from 167K to 295K students.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demographics</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"hispanic"</span>, <span class="st">"asian"</span>, <span class="st">"black"</span>, <span class="st">"multiracial"</span><span class="op">)</span>,</span>
@@ -172,87 +97,14 @@
 <div class="float">
 <img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png" alt="Demographics"><div class="figcaption">Demographics</div>
 </div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled">(source)</a></p>
 <hr>
 </div>
 <div class="section level3">
-<h3 id="id_4-puget-sound-holds-427k-students--nearly-4x-eastern-washington">4. Puget Sound holds 427K students – nearly 4x Eastern Washington<a class="anchor" aria-label="anchor" href="#id_4-puget-sound-holds-427k-students--nearly-4x-eastern-washington"></a>
-</h3>
-<p>The I-5 corridor dominates enrollment, but Eastern Washington’s districts face different challenges.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">esd_enrollment</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">esd_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">esd_name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
-<span>    districts <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    students <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">students</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">esd_enrollment</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">esd_enrollment</span></span>
-<span><span class="co">#&gt; # A tibble: 11 x 3</span></span>
-<span><span class="co">#&gt;    esd_name                                       districts students</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                                              &lt;int&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 Puget Sound Educational Service District 121          35   427222</span></span>
-<span><span class="co">#&gt;  2 Northwest Educational Service District 189            35   166971</span></span>
-<span><span class="co">#&gt;  3 Educational Service District 112                      30    97301</span></span>
-<span><span class="co">#&gt;  4 Educational Service District 101                      59    94984</span></span>
-<span><span class="co">#&gt;  5 Educational Service District 123                      22    77778</span></span>
-<span><span class="co">#&gt;  6 Capital Region ESD 113                                44    75121</span></span>
-<span><span class="co">#&gt;  7 Educational Service District 105                      25    65229</span></span>
-<span><span class="co">#&gt;  8 North Central Educational Service District 171        29    48048</span></span>
-<span><span class="co">#&gt;  9 Olympic Educational Service District 114              15    46477</span></span>
-<span><span class="co">#&gt; 10 Washington State Charter School Commission            15     4600</span></span>
-<span><span class="co">#&gt; 11 Spokane Public Schools Charter Authorizer              2      268</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png" alt="Regional chart"><div class="figcaption">Regional chart</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_5-suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015">5. Suburban districts are booming: Sumner-Bonney Lake up 23% since 2015<a class="anchor" aria-label="anchor" href="#id_5-suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015"></a>
-</h3>
-<p>The fastest-growing large districts are spread across the state, from Sumner-Bonney Lake south of Seattle to Central Valley near Spokane.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">growth_rates</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2015</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_id</span>, <span class="va">district_name</span>, <span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">yr_2015</span> <span class="op">&gt;</span> <span class="fl">5000</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    change <span class="op">=</span> <span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span>,</span>
-<span>    pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span><span class="op">)</span> <span class="op">/</span> <span class="va">yr_2015</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct_change</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">growth_rates</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">growth_rates</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 10 x 6</span></span>
-<span><span class="co">#&gt;    district_id district_name                   yr_2015 yr_2025 change pct_change</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                             &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 100259      Sumner-Bonney Lake School Dist~    8988   11048   2060       22.9</span></span>
-<span><span class="co">#&gt;  2 100126      Lake Stevens School District       8515   10215   1700       20</span></span>
-<span><span class="co">#&gt;  3 100016      Auburn School District            15722   18234   2512       16</span></span>
-<span><span class="co">#&gt;  4 100183      Omak School District               5257    6071    814       15.5</span></span>
-<span><span class="co">#&gt;  5 100022      Bethel School District            18678   21538   2860       15.3</span></span>
-<span><span class="co">#&gt;  6 100263      Tahoma School District             8118    9286   1168       14.4</span></span>
-<span><span class="co">#&gt;  7 100127      Lake Washington School District   27293   31146   3853       14.1</span></span>
-<span><span class="co">#&gt;  8 100218      Richland School District          12729   14499   1770       13.9</span></span>
-<span><span class="co">#&gt;  9 100039      Central Valley School District    13396   15102   1706       12.7</span></span>
-<span><span class="co">#&gt; 10 100195      Pasco School District             17182   19001   1819       10.6</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png" alt="Growth chart"><div class="figcaption">Growth chart</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_6-the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak">6. The kindergarten cliff is real: K enrollment down 14% from 2020 peak<a class="anchor" aria-label="anchor" href="#id_6-the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak"></a>
+<h3 id="id_2-the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak">2. The kindergarten cliff is real: K enrollment down 14% from 2020 peak<a class="anchor" aria-label="anchor" href="#id_2-the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak"></a>
 </h3>
 <p>Washington’s kindergarten enrollment dropped during COVID and hasn’t recovered, signaling smaller cohorts ahead.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"K"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -280,229 +132,14 @@
 <div class="float">
 <img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/k-chart-1.png" alt="Kindergarten enrollment"><div class="figcaption">Kindergarten enrollment</div>
 </div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak">(source)</a></p>
 <hr>
 </div>
 <div class="section level3">
-<h3 id="id_7-spokane-anchors-eastern-washington-with-nearly-30000-students">7. Spokane anchors Eastern Washington with nearly 30,000 students<a class="anchor" aria-label="anchor" href="#id_7-spokane-anchors-eastern-washington-with-nearly-30000-students"></a>
-</h3>
-<p>Spokane Public Schools serves 29,690 students, making it the largest district east of the Cascades and the state’s second-largest overall.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spokane</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Spokane"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">spokane</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">spokane</span></span>
-<span><span class="co">#&gt;                           district_name n_students</span></span>
-<span><span class="co">#&gt; 1               Spokane School District      29690</span></span>
-<span><span class="co">#&gt; 2 East Valley School District (Spokane)       3655</span></span>
-<span><span class="co">#&gt; 3 West Valley School District (Spokane)       3501</span></span>
-<span><span class="co">#&gt; 4         Spokane International Academy        830</span></span>
-<span><span class="co">#&gt; 5            Innovation Spokane Schools        235</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/spokane-chart-1.png" alt="Spokane enrollment"><div class="figcaption">Spokane enrollment</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_8-130-districts-have-fewer-than-500-students">8. 130 districts have fewer than 500 students<a class="anchor" aria-label="anchor" href="#id_8-130-districts-have-fewer-than-500-students"></a>
-</h3>
-<p>Nearly 40% of Washington’s districts serve fewer than 500 students, challenging their long-term viability.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">district_sizes</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_bucket <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
-<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">500</span> <span class="op">~</span> <span class="st">"Small (&lt;500)"</span>,</span>
-<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">2000</span> <span class="op">~</span> <span class="st">"Medium (500-2K)"</span>,</span>
-<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">10000</span> <span class="op">~</span> <span class="st">"Large (2K-10K)"</span>,</span>
-<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Very Large (10K+)"</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">size_bucket</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">district_sizes</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">district_sizes</span></span>
-<span><span class="co">#&gt;         size_bucket   n</span></span>
-<span><span class="co">#&gt; 1    Large (2K-10K)  81</span></span>
-<span><span class="co">#&gt; 2   Medium (500-2K)  87</span></span>
-<span><span class="co">#&gt; 3      Small (&lt;500) 130</span></span>
-<span><span class="co">#&gt; 4 Very Large (10K+)  32</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/small-districts-chart-1.png" alt="District sizes"><div class="figcaption">District sizes</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_9-tacoma-held-steady-at-30k-for-a-decade-before-covid">9. Tacoma held steady at ~30K for a decade before COVID<a class="anchor" aria-label="anchor" href="#id_9-tacoma-held-steady-at-30k-for-a-decade-before-covid"></a>
-</h3>
-<p>The state’s third-largest city maintained remarkably stable enrollment from 2010 to 2020 before losing 2,000 students.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tacoma</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Tacoma"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tacoma</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">tacoma</span></span>
-<span><span class="co">#&gt;    end_year          district_name n_students</span></span>
-<span><span class="co">#&gt; 1      2010 Tacoma School District      29625</span></span>
-<span><span class="co">#&gt; 2      2011 Tacoma School District      29856</span></span>
-<span><span class="co">#&gt; 3      2012 Tacoma School District      29704</span></span>
-<span><span class="co">#&gt; 4      2013 Tacoma School District      30122</span></span>
-<span><span class="co">#&gt; 5      2014 Tacoma School District      30411</span></span>
-<span><span class="co">#&gt; 6      2015 Tacoma School District      30606</span></span>
-<span><span class="co">#&gt; 7      2016 Tacoma School District      30554</span></span>
-<span><span class="co">#&gt; 8      2017 Tacoma School District      30326</span></span>
-<span><span class="co">#&gt; 9      2018 Tacoma School District      30414</span></span>
-<span><span class="co">#&gt; 10     2019 Tacoma School District      30320</span></span>
-<span><span class="co">#&gt; 11     2020 Tacoma School District      30406</span></span>
-<span><span class="co">#&gt; 12     2021 Tacoma School District      28734</span></span>
-<span><span class="co">#&gt; 13     2022 Tacoma School District      28779</span></span>
-<span><span class="co">#&gt; 14     2023 Tacoma School District      28457</span></span>
-<span><span class="co">#&gt; 15     2024 Tacoma School District      28353</span></span>
-<span><span class="co">#&gt; 16     2025 Tacoma School District      29014</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tacoma-chart-1.png" alt="Tacoma enrollment"><div class="figcaption">Tacoma enrollment</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_10-from-103m-to-11m-16-years-of-enrollment-milestones">10. From 1.03M to 1.1M: 16 years of enrollment milestones<a class="anchor" aria-label="anchor" href="#id_10-from-103m-to-11m-16-years-of-enrollment-milestones"></a>
-</h3>
-<p>Washington’s enrollment data spans 2010-2025, documenting the tech boom, pandemic disruption, and demographic transformation.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">decade_summary</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2019</span>, <span class="fl">2021</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
-<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2010</span> <span class="op">~</span> <span class="st">"Post-recession"</span>,</span>
-<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2015</span> <span class="op">~</span> <span class="st">"Tech boom"</span>,</span>
-<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2019</span> <span class="op">~</span> <span class="st">"Pre-COVID peak"</span>,</span>
-<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2021</span> <span class="op">~</span> <span class="st">"COVID low"</span>,</span>
-<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span> <span class="op">~</span> <span class="st">"Current"</span></span>
-<span>  <span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">decade_summary</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">decade_summary</span></span>
-<span><span class="co">#&gt;   end_year n_students          label</span></span>
-<span><span class="co">#&gt; 1     2010    1034935 Post-recession</span></span>
-<span><span class="co">#&gt; 2     2015    1086314      Tech boom</span></span>
-<span><span class="co">#&gt; 3     2019    1137367 Pre-COVID peak</span></span>
-<span><span class="co">#&gt; 4     2021    1093331      COVID low</span></span>
-<span><span class="co">#&gt; 5     2025    1105384        Current</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/summary-chart-1.png" alt="Enrollment milestones"><div class="figcaption">Enrollment milestones</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_11-1-in-6-washington-students-now-receives-special-education-services">11. 1 in 6 Washington students now receives special education services<a class="anchor" aria-label="anchor" href="#id_11-1-in-6-washington-students-now-receives-special-education-services"></a>
-</h3>
-<p>Special education identification rose from 13.2% to 16.4% over 16 years, with the rate accelerating since 2022.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sped_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"special_ed"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sped_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sped_trend</span></span>
-<span><span class="co">#&gt;    end_year n_students  pct</span></span>
-<span><span class="co">#&gt; 1      2010     136129 13.2</span></span>
-<span><span class="co">#&gt; 2      2011     141583 13.5</span></span>
-<span><span class="co">#&gt; 3      2012     145177 13.8</span></span>
-<span><span class="co">#&gt; 4      2013     146773 13.9</span></span>
-<span><span class="co">#&gt; 5      2014     148462 13.9</span></span>
-<span><span class="co">#&gt; 6      2015     149314 13.7</span></span>
-<span><span class="co">#&gt; 7      2016     153648 14.0</span></span>
-<span><span class="co">#&gt; 8      2017     157984 14.2</span></span>
-<span><span class="co">#&gt; 9      2018     163839 14.5</span></span>
-<span><span class="co">#&gt; 10     2019     169270 14.9</span></span>
-<span><span class="co">#&gt; 11     2020     170961 14.9</span></span>
-<span><span class="co">#&gt; 12     2021     158218 14.5</span></span>
-<span><span class="co">#&gt; 13     2022     161967 14.8</span></span>
-<span><span class="co">#&gt; 14     2023     168599 15.4</span></span>
-<span><span class="co">#&gt; 15     2024     176801 16.1</span></span>
-<span><span class="co">#&gt; 16     2025     181381 16.4</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/sped-chart-1.png" alt="Special education trends"><div class="figcaption">Special education trends</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_12-yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners">12. Yakima Valley: where 93% of students are Hispanic and half are English learners<a class="anchor" aria-label="anchor" href="#id_12-yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners"></a>
-</h3>
-<p>Central Washington’s agricultural heartland has the state’s highest concentrations of English learners and economically disadvantaged students.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">yakima_districts</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Yakima|Sunnyside|Toppenish|Wapato|Grandview"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">subgroup</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">subgroup</span>, values_from <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    pct_hispanic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">hispanic</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    pct_ell <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">lep</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>    pct_econ_disadv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">econ_disadv</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">total_enrollment</span>, <span class="va">pct_hispanic</span>, <span class="va">pct_ell</span>, <span class="va">pct_econ_disadv</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">total_enrollment</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">yakima_districts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">yakima_districts</span></span>
-<span><span class="co">#&gt; # A tibble: 7 x 5</span></span>
-<span><span class="co">#&gt;   district_name            total_enrollment pct_hispanic pct_ell pct_econ_disadv</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                               &lt;dbl&gt;        &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 Yakima School District              15621         82.1    34.2            86.8</span></span>
-<span><span class="co">#&gt; 2 Sunnyside School Distri~             6169         92.9    33.3            87.6</span></span>
-<span><span class="co">#&gt; 3 West Valley School Dist~             5570         41.5     9.9            54.9</span></span>
-<span><span class="co">#&gt; 4 Toppenish School Distri~             3670         86.9    36.3            89.9</span></span>
-<span><span class="co">#&gt; 5 Grandview School Distri~             3586         93.4    32.7            85.5</span></span>
-<span><span class="co">#&gt; 6 East Valley School Dist~             3408         58.5    15              65.7</span></span>
-<span><span class="co">#&gt; 7 Wapato School District               3225         77.2    50.6            89.9</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/yakima-chart-1.png" alt="Yakima Valley demographics"><div class="figcaption">Yakima Valley demographics</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_13-ridgefield-grew-84-while-vancouver-lost-7--clark-countys-diverging-paths">13. Ridgefield grew 84% while Vancouver lost 7% – Clark County’s diverging paths<a class="anchor" aria-label="anchor" href="#id_13-ridgefield-grew-84-while-vancouver-lost-7--clark-countys-diverging-paths"></a>
-</h3>
-<p>The Portland metro spillover has reshaped Clark County, with small suburban districts booming while the urban core declines.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clark_districts</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
-<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    growth_2015_2025 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span><span class="op">)</span> <span class="op">/</span> <span class="va">yr_2015</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">growth_2015_2025</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">clark_districts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">clark_districts</span></span>
-<span><span class="co">#&gt; # A tibble: 4 x 5</span></span>
-<span><span class="co">#&gt;   district_name                 yr_2015 yr_2020 yr_2025 growth_2015_2025</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;            &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 Ridgefield School District       2343    3499    4315             84.2</span></span>
-<span><span class="co">#&gt; 2 Camas School District            6695    7654    7272              8.6</span></span>
-<span><span class="co">#&gt; 3 Battle Ground School District   13589   13365   13080             -3.7</span></span>
-<span><span class="co">#&gt; 4 Vancouver School District       23486   23404   21943             -6.6</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/clark-county-chart-1.png" alt="Clark County growth"><div class="figcaption">Clark County growth</div>
-</div>
-<hr>
-</div>
-<div class="section level3">
-<h3 id="id_14-foster-care-enrollment-dropped-53-from-2019-peak">14. Foster care enrollment dropped 53% from 2019 peak<a class="anchor" aria-label="anchor" href="#id_14-foster-care-enrollment-dropped-53-from-2019-peak"></a>
+<h3 id="id_3-foster-care-enrollment-dropped-53-from-2019-peak">3. Foster care enrollment dropped 53% from 2019 peak<a class="anchor" aria-label="anchor" href="#id_3-foster-care-enrollment-dropped-53-from-2019-peak"></a>
 </h3>
 <p>Washington tracks foster care enrollment at every school, revealing the population peaked at 7,573 in 2019 and has since dropped to 3,560.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">foster_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"foster_care"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -530,49 +167,100 @@
 <div class="float">
 <img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/foster-care-chart-1.png" alt="Foster care trend"><div class="figcaption">Foster care trend</div>
 </div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#foster-care-enrollment-dropped-53-from-2019-peak">(source)</a></p>
 <hr>
 </div>
+</div>
+<div class="section level2">
+<h2 id="data-taxonomy">Data Taxonomy<a class="anchor" aria-label="anchor" href="#data-taxonomy"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="27%">
+<col width="19%">
+<col width="27%">
+<col width="25%">
+</colgroup>
+<thead><tr class="header">
+<th>Category</th>
+<th>Years</th>
+<th>Function</th>
+<th>Details</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Enrollment</strong></td>
+<td>2010-2025</td>
+<td>
+<code><a href="reference/fetch_enr.html">fetch_enr()</a></code> / <code><a href="reference/fetch_enr_multi.html">fetch_enr_multi()</a></code>
+</td>
+<td>State, district, school. Race, gender, FRPL, SpEd, LEP, foster care, homeless, migrant</td>
+</tr>
+<tr class="even">
+<td>Assessments</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="odd">
+<td>Graduation</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="even">
+<td>Directory</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="odd">
+<td>Per-Pupil Spending</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="even">
+<td>Accountability</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="odd">
+<td>Chronic Absence</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="even">
+<td>EL Progress</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+<tr class="odd">
+<td>Special Ed</td>
+<td>–</td>
+<td>–</td>
+<td>Not yet available</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>See the full <a href="DATA-CATEGORY-TAXONOMY.html">data category taxonomy</a> for what each category covers.</p>
+</blockquote>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
 <div class="section level3">
-<h3 id="id_15-the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32">15. The Tri-Cities boom: Pasco grew 31% while Kennewick and Richland added 19% and 32%<a class="anchor" aria-label="anchor" href="#id_15-the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32"></a>
+<h3 id="r">R<a class="anchor" aria-label="anchor" href="#r"></a>
 </h3>
-<p>The Tri-Cities in southeastern Washington have seen sustained population growth driven by Hanford cleanup and agricultural expansion.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tri_cities</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Richland|Kennewick|Pasco"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tri_cities</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">tri_cities_wide</span> <span class="op">&lt;-</span> <span class="va">tri_cities</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">tri_cities_wide</span></span>
-<span><span class="co">#&gt; # A tibble: 3 x 5</span></span>
-<span><span class="co">#&gt;   district_name             yr_2010 yr_2015 yr_2020 yr_2025</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 Kennewick School District   16085   17611   19554   19109</span></span>
-<span><span class="co">#&gt; 2 Pasco School District       14473   17182   19226   19001</span></span>
-<span><span class="co">#&gt; 3 Richland School District    10965   12729   14295   14499</span></span></code></pre></div>
-<div class="float">
-<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tri-cities-chart-1.png" alt="Tri-Cities growth"><div class="figcaption">Tri-Cities growth</div>
-</div>
-<hr>
-<p>See the <a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html">full vignette</a> for more insights and complete code output.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/waschooldata"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="r-quick-start">R Quick Start<a class="anchor" aria-label="anchor" href="#r-quick-start"></a>
-</h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/waschooldata/">waschooldata</a></span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"almartin82/waschooldata"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/waschooldata/">waschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get 2025 enrollment data (2024-25 school year)</span></span>
@@ -590,87 +278,37 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="python-quick-start">Python Quick Start<a class="anchor" aria-label="anchor" href="#python-quick-start"></a>
-</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="im">import</span> pywaschooldata <span class="im">as</span> wa</span>
-<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co"># Fetch 2025 data (2024-25 school year)</span></span>
-<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>enr <span class="op">=</span> wa.fetch_enr(<span class="dv">2025</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
-<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
-<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
-<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
-<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
-<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a></span>
-<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
-<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>enr_multi <span class="op">=</span> wa.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>, <span class="dv">2025</span>])</span>
-<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="co"># Check available years</span></span>
-<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a>years <span class="op">=</span> wa.get_available_years()</span>
-<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="data-format">Data Format<a class="anchor" aria-label="anchor" href="#data-format"></a>
-</h2>
-<p><code><a href="reference/fetch_enr.html">fetch_enr()</a></code> returns tidy (long) format by default:</p>
-<table class="table">
-<thead><tr class="header">
-<th>Column</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>end_year</code></td>
-<td>School year end (e.g., 2025 for 2024-25)</td>
-</tr>
-<tr class="even">
-<td><code>district_id</code></td>
-<td>District organization ID</td>
-</tr>
-<tr class="odd">
-<td><code>campus_id</code></td>
-<td>School organization ID</td>
-</tr>
-<tr class="even">
-<td><code>type</code></td>
-<td>“State”, “District”, or “Campus”</td>
-</tr>
-<tr class="odd">
-<td>
-<code>district_name</code>, <code>campus_name</code>
-</td>
-<td>Names</td>
-</tr>
-<tr class="even">
-<td><code>county</code></td>
-<td>County name</td>
-</tr>
-<tr class="odd">
-<td><code>grade_level</code></td>
-<td>“TOTAL”, “PK”, “K”, “01”…“12”</td>
-</tr>
-<tr class="even">
-<td><code>subgroup</code></td>
-<td>Demographic/population group</td>
-</tr>
-<tr class="odd">
-<td><code>n_students</code></td>
-<td>Enrollment count</td>
-</tr>
-<tr class="even">
-<td><code>pct</code></td>
-<td>Percentage of total</td>
-</tr>
-</tbody>
-</table>
 <div class="section level3">
-<h3 id="subgroups-available">Subgroups Available<a class="anchor" aria-label="anchor" href="#subgroups-available"></a>
+<h3 id="python">Python<a class="anchor" aria-label="anchor" href="#python"></a>
 </h3>
-<p><strong>Demographics</strong>: <code>white</code>, <code>black</code>, <code>hispanic</code>, <code>asian</code>, <code>pacific_islander</code>, <code>native_american</code>, <code>multiracial</code></p>
-<p><strong>Populations</strong>: <code>econ_disadv</code>, <code>lep</code>, <code>special_ed</code>, <code>homeless</code>, <code>foster_care</code>, <code>migrant</code>, <code>military_parent</code>, <code>highly_capable</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="im">import</span> pywaschooldata <span class="im">as</span> wa</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># Fetch 2025 data (2024-25 school year)</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>enr <span class="op">=</span> wa.fetch_enr(<span class="dv">2025</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>] <span class="op">==</span> <span class="va">True</span>) <span class="op">&amp;</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>) <span class="op">&amp;</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>            (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>enr_multi <span class="op">=</span> wa.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>, <span class="dv">2025</span>])</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co"># Check available years</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>years <span class="op">=</span> wa.get_available_years()</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="explore-more">Explore More<a class="anchor" aria-label="anchor" href="#explore-more"></a>
+</h2>
+<p>Full analysis with 15 stories covering statewide trends, regional patterns, and demographic shifts:</p>
+<ul>
+<li>
+<a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html">Enrollment trends</a> – 15 stories</li>
+<li><a href="https://almartin82.github.io/waschooldata/reference/">Function reference</a></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="data-notes">Data Notes<a class="anchor" aria-label="anchor" href="#data-notes"></a>
@@ -726,20 +364,408 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="part-of-the-state-schooldata-project">Part of the State Schooldata Project<a class="anchor" aria-label="anchor" href="#part-of-the-state-schooldata-project"></a>
+<h2 id="deeper-dive">Deeper Dive<a class="anchor" aria-label="anchor" href="#deeper-dive"></a>
 </h2>
-<p>This package is part of a larger effort to provide consistent access to state education data across all 50 states. The original package, <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a>, covers New Jersey and serves as the template for all state packages.</p>
-<p><strong>All 50 state packages:</strong> <a href="https://github.com/almartin82?tab=repositories&amp;q=schooldata" class="external-link">github.com/almartin82</a></p>
+<hr>
+<div class="section level3">
+<h3 id="id_4-washington-added-70000-students-over-16-years-before-covid-reversed-the-trend">4. Washington added 70,000 students over 16 years before COVID reversed the trend<a class="anchor" aria-label="anchor" href="#id_4-washington-added-70000-students-over-16-years-before-covid-reversed-the-trend"></a>
+</h3>
+<p>The Evergreen State grew enrollment steadily from 1.03 million to nearly 1.15 million before the pandemic wiped out years of gains.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">state_totals</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>change <span class="op">=</span> <span class="va">n_students</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span>,</span>
+<span>         pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">change</span> <span class="op">/</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">state_totals</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_totals</span></span>
+<span><span class="co">#&gt;    end_year n_students change pct_change</span></span>
+<span><span class="co">#&gt; 1      2010    1034935     NA         NA</span></span>
+<span><span class="co">#&gt; 2      2011    1045333  10398       1.00</span></span>
+<span><span class="co">#&gt; 3      2012    1051404   6071       0.58</span></span>
+<span><span class="co">#&gt; 4      2013    1058680   7276       0.69</span></span>
+<span><span class="co">#&gt; 5      2014    1068234   9554       0.90</span></span>
+<span><span class="co">#&gt; 6      2015    1086314  18080       1.69</span></span>
+<span><span class="co">#&gt; 7      2016    1100849  14535       1.34</span></span>
+<span><span class="co">#&gt; 8      2017    1115820  14971       1.36</span></span>
+<span><span class="co">#&gt; 9      2018    1130714  14894       1.33</span></span>
+<span><span class="co">#&gt; 10     2019    1137367   6653       0.59</span></span>
+<span><span class="co">#&gt; 11     2020    1146882   9515       0.84</span></span>
+<span><span class="co">#&gt; 12     2021    1093331 -53551      -4.67</span></span>
+<span><span class="co">#&gt; 13     2022    1091343  -1988      -0.18</span></span>
+<span><span class="co">#&gt; 14     2023    1096695   5352       0.49</span></span>
+<span><span class="co">#&gt; 15     2024    1100059   3364       0.31</span></span>
+<span><span class="co">#&gt; 16     2025    1105384   5325       0.48</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png" alt="Statewide enrollment"><div class="figcaption">Statewide enrollment</div>
 </div>
-<div class="section level2">
-<h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a>
-</h2>
-<p>Andy Martin (<a href="mailto:almartin@gmail.com" class="email">almartin@gmail.com</a>) <a href="https://github.com/almartin82" class="external-link">github.com/almartin82</a></p>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#washington-added-70000-students-over-16-years-before-covid-reversed-the-trend">(source)</a></p>
+<hr>
 </div>
-<div class="section level2">
-<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
-</h2>
-<p>MIT</p>
+<div class="section level3">
+<h3 id="id_5-seattle-peaked-at-56000-students-then-lost-9-in-five-years">5. Seattle peaked at 56,000 students then lost 9% in five years<a class="anchor" aria-label="anchor" href="#id_5-seattle-peaked-at-56000-students-then-lost-9-in-five-years"></a>
+</h3>
+<p>Washington’s largest district peaked in 2020 and has lost nearly 5,000 students since, even as tech industry growth transformed the region.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">seattle</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Seattle"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_of_peak <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">n_students</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">seattle</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">seattle</span></span>
+<span><span class="co">#&gt;    end_year                 district_name n_students pct_of_peak</span></span>
+<span><span class="co">#&gt; 1      2010 Seattle School District No. 1      47058        84.0</span></span>
+<span><span class="co">#&gt; 2      2011 Seattle School District No. 1      48299        86.2</span></span>
+<span><span class="co">#&gt; 3      2012 Seattle School District No. 1      49851        88.9</span></span>
+<span><span class="co">#&gt; 4      2013 Seattle School District No. 1      51201        91.3</span></span>
+<span><span class="co">#&gt; 5      2014 Seattle School District No. 1      52181        93.1</span></span>
+<span><span class="co">#&gt; 6      2015 Seattle School District No. 1      53361        95.2</span></span>
+<span><span class="co">#&gt; 7      2016 Seattle School District No. 1      53767        95.9</span></span>
+<span><span class="co">#&gt; 8      2017 Seattle School District No. 1      54722        97.6</span></span>
+<span><span class="co">#&gt; 9      2018 Seattle School District No. 1      55321        98.7</span></span>
+<span><span class="co">#&gt; 10     2019 Seattle School District No. 1      55325        98.7</span></span>
+<span><span class="co">#&gt; 11     2020 Seattle School District No. 1      56051       100.0</span></span>
+<span><span class="co">#&gt; 12     2021 Seattle School District No. 1      54021        96.4</span></span>
+<span><span class="co">#&gt; 13     2022 Seattle School District No. 1      51653        92.2</span></span>
+<span><span class="co">#&gt; 14     2023 Seattle School District No. 1      51528        91.9</span></span>
+<span><span class="co">#&gt; 15     2024 Seattle School District No. 1      50968        90.9</span></span>
+<span><span class="co">#&gt; 16     2025 Seattle School District No. 1      51200        91.3</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png" alt="Top districts"><div class="figcaption">Top districts</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#seattle-peaked-at-56000-students-then-lost-9-in-five-years">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_6-puget-sound-holds-427k-students--nearly-4x-eastern-washington">6. Puget Sound holds 427K students – nearly 4x Eastern Washington<a class="anchor" aria-label="anchor" href="#id_6-puget-sound-holds-427k-students--nearly-4x-eastern-washington"></a>
+</h3>
+<p>The I-5 corridor dominates enrollment, but Eastern Washington’s districts face different challenges.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">esd_enrollment</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">esd_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">esd_name</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    districts <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    students <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    .groups <span class="op">=</span> <span class="st">"drop"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">students</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">esd_enrollment</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">esd_enrollment</span></span>
+<span><span class="co">#&gt; # A tibble: 11 x 3</span></span>
+<span><span class="co">#&gt;    esd_name                                       districts students</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;                                              &lt;int&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 Puget Sound Educational Service District 121          35   427222</span></span>
+<span><span class="co">#&gt;  2 Northwest Educational Service District 189            35   166971</span></span>
+<span><span class="co">#&gt;  3 Educational Service District 112                      30    97301</span></span>
+<span><span class="co">#&gt;  4 Educational Service District 101                      59    94984</span></span>
+<span><span class="co">#&gt;  5 Educational Service District 123                      22    77778</span></span>
+<span><span class="co">#&gt;  6 Capital Region ESD 113                                44    75121</span></span>
+<span><span class="co">#&gt;  7 Educational Service District 105                      25    65229</span></span>
+<span><span class="co">#&gt;  8 North Central Educational Service District 171        29    48048</span></span>
+<span><span class="co">#&gt;  9 Olympic Educational Service District 114              15    46477</span></span>
+<span><span class="co">#&gt; 10 Washington State Charter School Commission            15     4600</span></span>
+<span><span class="co">#&gt; 11 Spokane Public Schools Charter Authorizer              2      268</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png" alt="Regional chart"><div class="figcaption">Regional chart</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#puget-sound-holds-427k-students----nearly-4x-eastern-washington">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_7-suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015">7. Suburban districts are booming: Sumner-Bonney Lake up 23% since 2015<a class="anchor" aria-label="anchor" href="#id_7-suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015"></a>
+</h3>
+<p>The fastest-growing large districts are spread across the state, from Sumner-Bonney Lake south of Seattle to Central Valley near Spokane.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">growth_rates</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2015</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_id</span>, <span class="va">district_name</span>, <span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">yr_2015</span> <span class="op">&gt;</span> <span class="fl">5000</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    change <span class="op">=</span> <span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span>,</span>
+<span>    pct_change <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span><span class="op">)</span> <span class="op">/</span> <span class="va">yr_2015</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct_change</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">growth_rates</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">growth_rates</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 10 x 6</span></span>
+<span><span class="co">#&gt;    district_id district_name                   yr_2015 yr_2025 change pct_change</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;       &lt;chr&gt;                             &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 100259      Sumner-Bonney Lake School Dist~    8988   11048   2060       22.9</span></span>
+<span><span class="co">#&gt;  2 100126      Lake Stevens School District       8515   10215   1700       20</span></span>
+<span><span class="co">#&gt;  3 100016      Auburn School District            15722   18234   2512       16</span></span>
+<span><span class="co">#&gt;  4 100183      Omak School District               5257    6071    814       15.5</span></span>
+<span><span class="co">#&gt;  5 100022      Bethel School District            18678   21538   2860       15.3</span></span>
+<span><span class="co">#&gt;  6 100263      Tahoma School District             8118    9286   1168       14.4</span></span>
+<span><span class="co">#&gt;  7 100127      Lake Washington School District   27293   31146   3853       14.1</span></span>
+<span><span class="co">#&gt;  8 100218      Richland School District          12729   14499   1770       13.9</span></span>
+<span><span class="co">#&gt;  9 100039      Central Valley School District    13396   15102   1706       12.7</span></span>
+<span><span class="co">#&gt; 10 100195      Pasco School District             17182   19001   1819       10.6</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png" alt="Growth chart"><div class="figcaption">Growth chart</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_8-spokane-anchors-eastern-washington-with-nearly-30000-students">8. Spokane anchors Eastern Washington with nearly 30,000 students<a class="anchor" aria-label="anchor" href="#id_8-spokane-anchors-eastern-washington-with-nearly-30000-students"></a>
+</h3>
+<p>Spokane Public Schools serves 29,690 students, making it the largest district east of the Cascades and the state’s second-largest overall.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">spokane</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Spokane"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">spokane</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">spokane</span></span>
+<span><span class="co">#&gt;                           district_name n_students</span></span>
+<span><span class="co">#&gt; 1               Spokane School District      29690</span></span>
+<span><span class="co">#&gt; 2 East Valley School District (Spokane)       3655</span></span>
+<span><span class="co">#&gt; 3 West Valley School District (Spokane)       3501</span></span>
+<span><span class="co">#&gt; 4         Spokane International Academy        830</span></span>
+<span><span class="co">#&gt; 5            Innovation Spokane Schools        235</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/spokane-chart-1.png" alt="Spokane enrollment"><div class="figcaption">Spokane enrollment</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#spokane-anchors-eastern-washington-with-nearly-30000-students">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_9-130-districts-have-fewer-than-500-students">9. 130 districts have fewer than 500 students<a class="anchor" aria-label="anchor" href="#id_9-130-districts-have-fewer-than-500-students"></a>
+</h3>
+<p>Nearly 40% of Washington’s districts serve fewer than 500 students, challenging their long-term viability.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">district_sizes</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>size_bucket <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">500</span> <span class="op">~</span> <span class="st">"Small (&lt;500)"</span>,</span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">2000</span> <span class="op">~</span> <span class="st">"Medium (500-2K)"</span>,</span>
+<span>    <span class="va">n_students</span> <span class="op">&lt;</span> <span class="fl">10000</span> <span class="op">~</span> <span class="st">"Large (2K-10K)"</span>,</span>
+<span>    <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"Very Large (10K+)"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">size_bucket</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">district_sizes</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">district_sizes</span></span>
+<span><span class="co">#&gt;         size_bucket   n</span></span>
+<span><span class="co">#&gt; 1    Large (2K-10K)  81</span></span>
+<span><span class="co">#&gt; 2   Medium (500-2K)  87</span></span>
+<span><span class="co">#&gt; 3      Small (&lt;500) 130</span></span>
+<span><span class="co">#&gt; 4 Very Large (10K+)  32</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/small-districts-chart-1.png" alt="District sizes"><div class="figcaption">District sizes</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#districts-have-fewer-than-500-students">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_10-tacoma-held-steady-at-30k-for-a-decade-before-covid">10. Tacoma held steady at ~30K for a decade before COVID<a class="anchor" aria-label="anchor" href="#id_10-tacoma-held-steady-at-30k-for-a-decade-before-covid"></a>
+</h3>
+<p>The state’s third-largest city maintained remarkably stable enrollment from 2010 to 2020 before losing 2,000 students.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tacoma</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Tacoma"</span>, <span class="va">district_name</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tacoma</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tacoma</span></span>
+<span><span class="co">#&gt;    end_year          district_name n_students</span></span>
+<span><span class="co">#&gt; 1      2010 Tacoma School District      29625</span></span>
+<span><span class="co">#&gt; 2      2011 Tacoma School District      29856</span></span>
+<span><span class="co">#&gt; 3      2012 Tacoma School District      29704</span></span>
+<span><span class="co">#&gt; 4      2013 Tacoma School District      30122</span></span>
+<span><span class="co">#&gt; 5      2014 Tacoma School District      30411</span></span>
+<span><span class="co">#&gt; 6      2015 Tacoma School District      30606</span></span>
+<span><span class="co">#&gt; 7      2016 Tacoma School District      30554</span></span>
+<span><span class="co">#&gt; 8      2017 Tacoma School District      30326</span></span>
+<span><span class="co">#&gt; 9      2018 Tacoma School District      30414</span></span>
+<span><span class="co">#&gt; 10     2019 Tacoma School District      30320</span></span>
+<span><span class="co">#&gt; 11     2020 Tacoma School District      30406</span></span>
+<span><span class="co">#&gt; 12     2021 Tacoma School District      28734</span></span>
+<span><span class="co">#&gt; 13     2022 Tacoma School District      28779</span></span>
+<span><span class="co">#&gt; 14     2023 Tacoma School District      28457</span></span>
+<span><span class="co">#&gt; 15     2024 Tacoma School District      28353</span></span>
+<span><span class="co">#&gt; 16     2025 Tacoma School District      29014</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tacoma-chart-1.png" alt="Tacoma enrollment"><div class="figcaption">Tacoma enrollment</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#tacoma-held-steady-at-30k-for-a-decade-before-covid">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_11-from-103m-to-11m-16-years-of-enrollment-milestones">11. From 1.03M to 1.1M: 16 years of enrollment milestones<a class="anchor" aria-label="anchor" href="#id_11-from-103m-to-11m-16-years-of-enrollment-milestones"></a>
+</h3>
+<p>Washington’s enrollment data spans 2010-2025, documenting the tech boom, pandemic disruption, and demographic transformation.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">decade_summary</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2019</span>, <span class="fl">2021</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2010</span> <span class="op">~</span> <span class="st">"Post-recession"</span>,</span>
+<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2015</span> <span class="op">~</span> <span class="st">"Tech boom"</span>,</span>
+<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2019</span> <span class="op">~</span> <span class="st">"Pre-COVID peak"</span>,</span>
+<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2021</span> <span class="op">~</span> <span class="st">"COVID low"</span>,</span>
+<span>    <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span> <span class="op">~</span> <span class="st">"Current"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">decade_summary</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">decade_summary</span></span>
+<span><span class="co">#&gt;   end_year n_students          label</span></span>
+<span><span class="co">#&gt; 1     2010    1034935 Post-recession</span></span>
+<span><span class="co">#&gt; 2     2015    1086314      Tech boom</span></span>
+<span><span class="co">#&gt; 3     2019    1137367 Pre-COVID peak</span></span>
+<span><span class="co">#&gt; 4     2021    1093331      COVID low</span></span>
+<span><span class="co">#&gt; 5     2025    1105384        Current</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/summary-chart-1.png" alt="Enrollment milestones"><div class="figcaption">Enrollment milestones</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#from-103m-to-11m-16-years-of-enrollment-milestones">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_12-1-in-6-washington-students-now-receives-special-education-services">12. 1 in 6 Washington students now receives special education services<a class="anchor" aria-label="anchor" href="#id_12-1-in-6-washington-students-now-receives-special-education-services"></a>
+</h3>
+<p>Special education identification rose from 13.2% to 16.4% over 16 years, with the rate accelerating since 2022.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sped_trend</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"special_ed"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">sped_trend</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sped_trend</span></span>
+<span><span class="co">#&gt;    end_year n_students  pct</span></span>
+<span><span class="co">#&gt; 1      2010     136129 13.2</span></span>
+<span><span class="co">#&gt; 2      2011     141583 13.5</span></span>
+<span><span class="co">#&gt; 3      2012     145177 13.8</span></span>
+<span><span class="co">#&gt; 4      2013     146773 13.9</span></span>
+<span><span class="co">#&gt; 5      2014     148462 13.9</span></span>
+<span><span class="co">#&gt; 6      2015     149314 13.7</span></span>
+<span><span class="co">#&gt; 7      2016     153648 14.0</span></span>
+<span><span class="co">#&gt; 8      2017     157984 14.2</span></span>
+<span><span class="co">#&gt; 9      2018     163839 14.5</span></span>
+<span><span class="co">#&gt; 10     2019     169270 14.9</span></span>
+<span><span class="co">#&gt; 11     2020     170961 14.9</span></span>
+<span><span class="co">#&gt; 12     2021     158218 14.5</span></span>
+<span><span class="co">#&gt; 13     2022     161967 14.8</span></span>
+<span><span class="co">#&gt; 14     2023     168599 15.4</span></span>
+<span><span class="co">#&gt; 15     2024     176801 16.1</span></span>
+<span><span class="co">#&gt; 16     2025     181381 16.4</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/sped-chart-1.png" alt="Special education trends"><div class="figcaption">Special education trends</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#in-6-washington-students-now-receives-special-education-services">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_13-yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners">13. Yakima Valley: where 93% of students are Hispanic and half are English learners<a class="anchor" aria-label="anchor" href="#id_13-yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners"></a>
+</h3>
+<p>Central Washington’s agricultural heartland has the state’s highest concentrations of English learners and economically disadvantaged students.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">yakima_districts</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">end_year</span> <span class="op">==</span> <span class="fl">2025</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Yakima|Sunnyside|Toppenish|Wapato|Grandview"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">subgroup</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">subgroup</span>, values_from <span class="op">=</span> <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    pct_hispanic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">hispanic</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    pct_ell <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">lep</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    pct_econ_disadv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">econ_disadv</span> <span class="op">/</span> <span class="va">total_enrollment</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">total_enrollment</span>, <span class="va">pct_hispanic</span>, <span class="va">pct_ell</span>, <span class="va">pct_econ_disadv</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">total_enrollment</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">yakima_districts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">yakima_districts</span></span>
+<span><span class="co">#&gt; # A tibble: 7 x 5</span></span>
+<span><span class="co">#&gt;   district_name            total_enrollment pct_hispanic pct_ell pct_econ_disadv</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                               &lt;dbl&gt;        &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Yakima School District              15621         82.1    34.2            86.8</span></span>
+<span><span class="co">#&gt; 2 Sunnyside School Distri~             6169         92.9    33.3            87.6</span></span>
+<span><span class="co">#&gt; 3 West Valley School Dist~             5570         41.5     9.9            54.9</span></span>
+<span><span class="co">#&gt; 4 Toppenish School Distri~             3670         86.9    36.3            89.9</span></span>
+<span><span class="co">#&gt; 5 Grandview School Distri~             3586         93.4    32.7            85.5</span></span>
+<span><span class="co">#&gt; 6 East Valley School Dist~             3408         58.5    15              65.7</span></span>
+<span><span class="co">#&gt; 7 Wapato School District               3225         77.2    50.6            89.9</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/yakima-chart-1.png" alt="Yakima Valley demographics"><div class="figcaption">Yakima Valley demographics</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_14-ridgefield-grew-84-while-vancouver-lost-7--clark-countys-diverging-paths">14. Ridgefield grew 84% while Vancouver lost 7% – Clark County’s diverging paths<a class="anchor" aria-label="anchor" href="#id_14-ridgefield-grew-84-while-vancouver-lost-7--clark-countys-diverging-paths"></a>
+</h3>
+<p>The Portland metro spillover has reshaped Clark County, with small suburban districts booming while the urban core declines.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">clark_districts</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Vancouver|Evergreen SD|Camas|Battle Ground|Ridgefield"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
+<span>         <span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">end_year</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    growth_2015_2025 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">(</span><span class="va">yr_2025</span> <span class="op">-</span> <span class="va">yr_2015</span><span class="op">)</span> <span class="op">/</span> <span class="va">yr_2015</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">growth_2015_2025</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">clark_districts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">clark_districts</span></span>
+<span><span class="co">#&gt; # A tibble: 4 x 5</span></span>
+<span><span class="co">#&gt;   district_name                 yr_2015 yr_2020 yr_2025 growth_2015_2025</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;            &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Ridgefield School District       2343    3499    4315             84.2</span></span>
+<span><span class="co">#&gt; 2 Camas School District            6695    7654    7272              8.6</span></span>
+<span><span class="co">#&gt; 3 Battle Ground School District   13589   13365   13080             -3.7</span></span>
+<span><span class="co">#&gt; 4 Vancouver School District       23486   23404   21943             -6.6</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/clark-county-chart-1.png" alt="Clark County growth"><div class="figcaption">Clark County growth</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#ridgefield-grew-84-while-vancouver-lost-7----clark-countys-diverging-paths">(source)</a></p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="id_15-the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32">15. The Tri-Cities boom: Pasco grew 31% while Kennewick and Richland added 19% and 32%<a class="anchor" aria-label="anchor" href="#id_15-the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32"></a>
+</h3>
+<p>The Tri-Cities in southeastern Washington have seen sustained population growth driven by Hanford cleanup and agricultural expansion.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">tri_cities</span> <span class="op">&lt;-</span> <span class="va">enr</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Richland|Kennewick|Pasco"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tri_cities</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tri_cities_wide</span> <span class="op">&lt;-</span> <span class="va">tri_cities</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">end_year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">end_year</span>, values_from <span class="op">=</span> <span class="va">n_students</span>, names_prefix <span class="op">=</span> <span class="st">"yr_"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tri_cities_wide</span></span>
+<span><span class="co">#&gt; # A tibble: 3 x 5</span></span>
+<span><span class="co">#&gt;   district_name             yr_2010 yr_2015 yr_2020 yr_2025</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Kennewick School District   16085   17611   19554   19109</span></span>
+<span><span class="co">#&gt; 2 Pasco School District       14473   17182   19226   19001</span></span>
+<span><span class="co">#&gt; 3 Richland School District    10965   12729   14295   14499</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tri-cities-chart-1.png" alt="Tri-Cities growth"><div class="figcaption">Tri-Cities growth</div>
+</div>
+<p><a href="https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32">(source)</a></p>
+<hr>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
