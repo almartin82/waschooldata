@@ -7,23 +7,13 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-**[Documentation](https://almartin82.github.io/waschooldata/)** | [GitHub](https://github.com/almartin82/waschooldata)
+Washington educates **1.1 million students** across 295 school districts, from the tech corridors of Seattle to the wheat fields of the Palouse. This package gives you 16 years of enrollment data (2010-2025) for every school, district, and the state -- race, gender, grade level, special populations, and more -- via the OSPI data.wa.gov API.
 
-## About This Package
+Part of the [njschooldata](https://github.com/almartin82/njschooldata) family of state education data packages.
 
-waschooldata is part of the [state schooldata project](https://github.com/almartin82/njschooldata), a family of R packages that provide consistent, tidy access to state-level education data. The mothership package, [njschooldata](https://github.com/almartin82/njschooldata), covers New Jersey; this package extends the same approach to Washington state.
+**[Full documentation](https://almartin82.github.io/waschooldata/)** -- all 15 stories with interactive charts, getting-started guide, and complete function reference.
 
-Fetch and analyze Washington school enrollment data from [OSPI](https://data.wa.gov/) in R or Python. **16 years of data** (2010-2025) for every school, district, and the state via the data.wa.gov Socrata API.
-
-## What can you find with waschooldata?
-
-Washington educates **1.1 million students** across 295 school districts, from the tech corridors of Seattle to the wheat fields of the Palouse. Here are fifteen stories hiding in the data:
-
----
-
-### 1. Washington added 70,000 students over 16 years before COVID reversed the trend
-
-The Evergreen State grew enrollment steadily from 1.03 million to nearly 1.15 million before the pandemic wiped out years of gains.
+## Highlights
 
 ```r
 library(waschooldata)
@@ -31,7 +21,230 @@ library(dplyr)
 library(tidyr)
 
 enr <- fetch_enr_multi(2010:2025, use_cache = TRUE)
+```
 
+---
+
+### 1. White students dropped from 64% to 48% as Hispanic enrollment nearly doubled
+
+The state's demographics reflect Pacific Rim immigration and a growing Hispanic population that rose from 167K to 295K students.
+
+```r
+demographics <- enr |>
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("white", "hispanic", "asian", "black", "multiracial"),
+         end_year %in% c(2010, 2015, 2020, 2025)) |>
+  select(end_year, subgroup, n_students, pct) |>
+  mutate(pct = round(pct * 100, 1))
+stopifnot(nrow(demographics) > 0)
+
+demographics |>
+  pivot_wider(names_from = end_year, values_from = c(n_students, pct))
+#> # A tibble: 5 x 9
+#>   subgroup    n_students_2010 n_students_2015 n_students_2020 n_students_2025
+#>   <chr>                 <dbl>           <dbl>           <dbl>           <dbl>
+#> 1 white                657143          615697          601749          526102
+#> 2 black                 56515           48578           50251           53176
+#> 3 hispanic             167426          235730          273842          294985
+#> 4 asian                 80375           77981           91377          100676
+#> 5 multiracial           35867           81757          101807          101068
+#> # i 4 more variables: pct_2010 <dbl>, pct_2015 <dbl>, pct_2020 <dbl>,
+#> #   pct_2025 <dbl>
+```
+
+![Demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png)
+
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#white-students-dropped-from-64-to-48-as-hispanic-enrollment-nearly-doubled)
+
+---
+
+### 2. The kindergarten cliff is real: K enrollment down 14% from 2020 peak
+
+Washington's kindergarten enrollment dropped during COVID and hasn't recovered, signaling smaller cohorts ahead.
+
+```r
+k_trend <- enr |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "K") |>
+  select(end_year, n_students) |>
+  mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
+stopifnot(nrow(k_trend) > 0)
+
+k_trend
+#>    end_year n_students pct_of_peak
+#> 1      2010      73735        88.9
+#> 2      2011      75364        90.9
+#> 3      2012      77896        93.9
+#> 4      2013      80426        97.0
+#> 5      2014      81286        98.0
+#> 6      2015      81348        98.1
+#> 7      2016      79874        96.3
+#> 8      2017      81151        97.8
+#> 9      2018      81428        98.2
+#> 10     2019      82130        99.0
+#> 11     2020      82947       100.0
+#> 12     2021      70977        85.6
+#> 13     2022      78640        94.8
+#> 14     2023      78406        94.5
+#> 15     2024      76359        92.1
+#> 16     2025      71443        86.1
+```
+
+![Kindergarten enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/k-chart-1.png)
+
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#the-kindergarten-cliff-is-real-k-enrollment-down-14-from-2020-peak)
+
+---
+
+### 3. Foster care enrollment dropped 53% from 2019 peak
+
+Washington tracks foster care enrollment at every school, revealing the population peaked at 7,573 in 2019 and has since dropped to 3,560.
+
+```r
+foster_trend <- enr |>
+  filter(is_state, grade_level == "TOTAL", subgroup == "foster_care") |>
+  select(end_year, n_students, pct) |>
+  mutate(pct = round(pct * 100, 2))
+stopifnot(nrow(foster_trend) > 0)
+
+foster_trend
+#>    end_year n_students  pct
+#> 1      2010       6670 0.64
+#> 2      2011       6715 0.64
+#> 3      2012       6124 0.58
+#> 4      2013       5627 0.53
+#> 5      2014       5452 0.51
+#> 6      2015       5268 0.48
+#> 7      2016       5224 0.47
+#> 8      2017       5873 0.53
+#> 9      2018       6739 0.60
+#> 10     2019       7573 0.67
+#> 11     2020       6812 0.59
+#> 12     2021       5598 0.51
+#> 13     2022       4903 0.45
+#> 14     2023       4112 0.37
+#> 15     2024       3317 0.30
+#> 16     2025       3560 0.32
+```
+
+![Foster care trend](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/foster-care-chart-1.png)
+
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#foster-care-enrollment-dropped-53-from-2019-peak)
+
+---
+
+## Data Taxonomy
+
+| Category | Years | Function | Details |
+|----------|-------|----------|---------|
+| **Enrollment** | 2010-2025 | `fetch_enr()` / `fetch_enr_multi()` | State, district, school. Race, gender, FRPL, SpEd, LEP, foster care, homeless, migrant |
+| Assessments | -- | -- | Not yet available |
+| Graduation | -- | -- | Not yet available |
+| Directory | -- | -- | Not yet available |
+| Per-Pupil Spending | -- | -- | Not yet available |
+| Accountability | -- | -- | Not yet available |
+| Chronic Absence | -- | -- | Not yet available |
+| EL Progress | -- | -- | Not yet available |
+| Special Ed | -- | -- | Not yet available |
+
+> See the full [data category taxonomy](DATA-CATEGORY-TAXONOMY.md) for what each category covers.
+
+## Quick Start
+
+### R
+
+```r
+# install.packages("devtools")
+devtools::install_github("almartin82/waschooldata")
+
+library(waschooldata)
+library(dplyr)
+
+# Get 2025 enrollment data (2024-25 school year)
+enr <- fetch_enr(2025)
+
+# Statewide total
+enr |>
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  select(end_year, n_students)
+
+# Top 5 districts
+enr |>
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
+  arrange(desc(n_students)) |>
+  select(district_name, n_students) |>
+  head(5)
+```
+
+### Python
+
+```python
+import pywaschooldata as wa
+
+# Fetch 2025 data (2024-25 school year)
+enr = wa.fetch_enr(2025)
+
+# Statewide total
+total = enr[(enr['is_state'] == True) &
+            (enr['subgroup'] == 'total_enrollment') &
+            (enr['grade_level'] == 'TOTAL')]['n_students'].sum()
+print(f"{total:,} students")
+
+# Get multiple years
+enr_multi = wa.fetch_enr_multi([2020, 2021, 2022, 2023, 2024, 2025])
+
+# Check available years
+years = wa.get_available_years()
+print(f"Data available: {years['min_year']}-{years['max_year']}")
+```
+
+## Explore More
+
+Full analysis with 15 stories covering statewide trends, regional patterns, and demographic shifts:
+
+- [Enrollment trends](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html) -- 15 stories
+- [Function reference](https://almartin82.github.io/waschooldata/reference/)
+
+## Data Notes
+
+### Data Source
+
+All data comes directly from the Washington Office of Superintendent of Public Instruction (OSPI) via the [Washington State Report Card](https://washingtonstatereportcard.ospi.k12.wa.us/) and [data.wa.gov](https://data.wa.gov/).
+
+### Data Availability
+
+| Era | Years | Source |
+|-----|-------|--------|
+| Report Card | 2015-2025 | data.wa.gov (full detail) |
+| Student Enrollment | 2010-2014 | data.wa.gov (fewer ID columns) |
+
+**16 years total** across ~2,400 schools and 295 districts.
+
+### Suppression Rules
+
+Washington suppresses student counts where:
+- Counts are less than 10 students (for privacy)
+- Subgroup percentages that could identify individuals
+
+### Census Day
+
+Enrollment data is collected on Census Day (typically the first week of October). This is a snapshot of enrollment at that point in the school year.
+
+### Known Caveats
+
+- The 2010-2014 "Student Enrollment" datasets use slightly different column formats than the 2015+ "Report Card Enrollment" datasets; this package normalizes them to a consistent schema
+- ESD (Educational Service District) information is available for recent years but may be missing for older data (2010-2014)
+- Some district names have changed over time; the package uses current names
+- Charter schools were not legal in Washington until 2012, so charter data begins in 2015
+
+## Deeper Dive
+
+---
+
+### 4. Washington added 70,000 students over 16 years before COVID reversed the trend
+
+The Evergreen State grew enrollment steadily from 1.03 million to nearly 1.15 million before the pandemic wiped out years of gains.
+
+```r
 state_totals <- enr |>
   filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
   select(end_year, n_students) |>
@@ -61,9 +274,11 @@ state_totals
 
 ![Statewide enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/statewide-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#washington-added-70000-students-over-16-years-before-covid-reversed-the-trend)
+
 ---
 
-### 2. Seattle peaked at 56,000 students then lost 9% in five years
+### 5. Seattle peaked at 56,000 students then lost 9% in five years
 
 Washington's largest district peaked in 2020 and has lost nearly 5,000 students since, even as tech industry growth transformed the region.
 
@@ -97,40 +312,11 @@ seattle
 
 ![Top districts](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/top-districts-chart-1.png)
 
----
-
-### 3. White students dropped from 64% to 48% as Hispanic enrollment nearly doubled
-
-The state's demographics reflect Pacific Rim immigration and a growing Hispanic population that rose from 167K to 295K students.
-
-```r
-demographics <- enr |>
-  filter(is_state, grade_level == "TOTAL",
-         subgroup %in% c("white", "hispanic", "asian", "black", "multiracial"),
-         end_year %in% c(2010, 2015, 2020, 2025)) |>
-  select(end_year, subgroup, n_students, pct) |>
-  mutate(pct = round(pct * 100, 1))
-stopifnot(nrow(demographics) > 0)
-
-demographics |>
-  pivot_wider(names_from = end_year, values_from = c(n_students, pct))
-#> # A tibble: 5 x 9
-#>   subgroup    n_students_2010 n_students_2015 n_students_2020 n_students_2025
-#>   <chr>                 <dbl>           <dbl>           <dbl>           <dbl>
-#> 1 white                657143          615697          601749          526102
-#> 2 black                 56515           48578           50251           53176
-#> 3 hispanic             167426          235730          273842          294985
-#> 4 asian                 80375           77981           91377          100676
-#> 5 multiracial           35867           81757          101807          101068
-#> # i 4 more variables: pct_2010 <dbl>, pct_2015 <dbl>, pct_2020 <dbl>,
-#> #   pct_2025 <dbl>
-```
-
-![Demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/demographics-chart-1.png)
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#seattle-peaked-at-56000-students-then-lost-9-in-five-years)
 
 ---
 
-### 4. Puget Sound holds 427K students -- nearly 4x Eastern Washington
+### 6. Puget Sound holds 427K students -- nearly 4x Eastern Washington
 
 The I-5 corridor dominates enrollment, but Eastern Washington's districts face different challenges.
 
@@ -166,9 +352,11 @@ esd_enrollment
 
 ![Regional chart](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/regional-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#puget-sound-holds-427k-students----nearly-4x-eastern-washington)
+
 ---
 
-### 5. Suburban districts are booming: Sumner-Bonney Lake up 23% since 2015
+### 7. Suburban districts are booming: Sumner-Bonney Lake up 23% since 2015
 
 The fastest-growing large districts are spread across the state, from Sumner-Bonney Lake south of Seattle to Central Valley near Spokane.
 
@@ -204,44 +392,11 @@ head(growth_rates, 10)
 
 ![Growth chart](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/growth-chart-1.png)
 
----
-
-### 6. The kindergarten cliff is real: K enrollment down 14% from 2020 peak
-
-Washington's kindergarten enrollment dropped during COVID and hasn't recovered, signaling smaller cohorts ahead.
-
-```r
-k_trend <- enr |>
-  filter(is_state, subgroup == "total_enrollment", grade_level == "K") |>
-  select(end_year, n_students) |>
-  mutate(pct_of_peak = round(n_students / max(n_students) * 100, 1))
-stopifnot(nrow(k_trend) > 0)
-
-k_trend
-#>    end_year n_students pct_of_peak
-#> 1      2010      73735        88.9
-#> 2      2011      75364        90.9
-#> 3      2012      77896        93.9
-#> 4      2013      80426        97.0
-#> 5      2014      81286        98.0
-#> 6      2015      81348        98.1
-#> 7      2016      79874        96.3
-#> 8      2017      81151        97.8
-#> 9      2018      81428        98.2
-#> 10     2019      82130        99.0
-#> 11     2020      82947       100.0
-#> 12     2021      70977        85.6
-#> 13     2022      78640        94.8
-#> 14     2023      78406        94.5
-#> 15     2024      76359        92.1
-#> 16     2025      71443        86.1
-```
-
-![Kindergarten enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/k-chart-1.png)
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#suburban-districts-are-booming-sumner-bonney-lake-up-23-since-2015)
 
 ---
 
-### 7. Spokane anchors Eastern Washington with nearly 30,000 students
+### 8. Spokane anchors Eastern Washington with nearly 30,000 students
 
 Spokane Public Schools serves 29,690 students, making it the largest district east of the Cascades and the state's second-largest overall.
 
@@ -265,9 +420,11 @@ spokane
 
 ![Spokane enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/spokane-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#spokane-anchors-eastern-washington-with-nearly-30000-students)
+
 ---
 
-### 8. 130 districts have fewer than 500 students
+### 9. 130 districts have fewer than 500 students
 
 Nearly 40% of Washington's districts serve fewer than 500 students, challenging their long-term viability.
 
@@ -294,9 +451,11 @@ district_sizes
 
 ![District sizes](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/small-districts-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#districts-have-fewer-than-500-students)
+
 ---
 
-### 9. Tacoma held steady at ~30K for a decade before COVID
+### 10. Tacoma held steady at ~30K for a decade before COVID
 
 The state's third-largest city maintained remarkably stable enrollment from 2010 to 2020 before losing 2,000 students.
 
@@ -329,9 +488,11 @@ tacoma
 
 ![Tacoma enrollment](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tacoma-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#tacoma-held-steady-at-30k-for-a-decade-before-covid)
+
 ---
 
-### 10. From 1.03M to 1.1M: 16 years of enrollment milestones
+### 11. From 1.03M to 1.1M: 16 years of enrollment milestones
 
 Washington's enrollment data spans 2010-2025, documenting the tech boom, pandemic disruption, and demographic transformation.
 
@@ -360,9 +521,11 @@ decade_summary
 
 ![Enrollment milestones](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/summary-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#from-103m-to-11m-16-years-of-enrollment-milestones)
+
 ---
 
-### 11. 1 in 6 Washington students now receives special education services
+### 12. 1 in 6 Washington students now receives special education services
 
 Special education identification rose from 13.2% to 16.4% over 16 years, with the rate accelerating since 2022.
 
@@ -395,9 +558,11 @@ sped_trend
 
 ![Special education trends](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/sped-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#in-6-washington-students-now-receives-special-education-services)
+
 ---
 
-### 12. Yakima Valley: where 93% of students are Hispanic and half are English learners
+### 13. Yakima Valley: where 93% of students are Hispanic and half are English learners
 
 Central Washington's agricultural heartland has the state's highest concentrations of English learners and economically disadvantaged students.
 
@@ -431,9 +596,11 @@ yakima_districts
 
 ![Yakima Valley demographics](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/yakima-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#yakima-valley-where-93-of-students-are-hispanic-and-half-are-english-learners)
+
 ---
 
-### 13. Ridgefield grew 84% while Vancouver lost 7% -- Clark County's diverging paths
+### 14. Ridgefield grew 84% while Vancouver lost 7% -- Clark County's diverging paths
 
 The Portland metro spillover has reshaped Clark County, with small suburban districts booming while the urban core declines.
 
@@ -462,40 +629,7 @@ clark_districts
 
 ![Clark County growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/clark-county-chart-1.png)
 
----
-
-### 14. Foster care enrollment dropped 53% from 2019 peak
-
-Washington tracks foster care enrollment at every school, revealing the population peaked at 7,573 in 2019 and has since dropped to 3,560.
-
-```r
-foster_trend <- enr |>
-  filter(is_state, grade_level == "TOTAL", subgroup == "foster_care") |>
-  select(end_year, n_students, pct) |>
-  mutate(pct = round(pct * 100, 2))
-stopifnot(nrow(foster_trend) > 0)
-
-foster_trend
-#>    end_year n_students  pct
-#> 1      2010       6670 0.64
-#> 2      2011       6715 0.64
-#> 3      2012       6124 0.58
-#> 4      2013       5627 0.53
-#> 5      2014       5452 0.51
-#> 6      2015       5268 0.48
-#> 7      2016       5224 0.47
-#> 8      2017       5873 0.53
-#> 9      2018       6739 0.60
-#> 10     2019       7573 0.67
-#> 11     2020       6812 0.59
-#> 12     2021       5598 0.51
-#> 13     2022       4903 0.45
-#> 14     2023       4112 0.37
-#> 15     2024       3317 0.30
-#> 16     2025       3560 0.32
-```
-
-![Foster care trend](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/foster-care-chart-1.png)
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#ridgefield-grew-84-while-vancouver-lost-7----clark-countys-diverging-paths)
 
 ---
 
@@ -525,127 +659,6 @@ tri_cities_wide
 
 ![Tri-Cities growth](https://almartin82.github.io/waschooldata/articles/enrollment_hooks_files/figure-html/tri-cities-chart-1.png)
 
+[(source)](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html#the-tri-cities-boom-pasco-grew-31-while-kennewick-and-richland-added-19-and-32)
+
 ---
-
-See the [full vignette](https://almartin82.github.io/waschooldata/articles/enrollment_hooks.html) for more insights and complete code output.
-
-## Installation
-
-```r
-# install.packages("devtools")
-devtools::install_github("almartin82/waschooldata")
-```
-
-## R Quick Start
-
-```r
-library(waschooldata)
-library(dplyr)
-
-# Get 2025 enrollment data (2024-25 school year)
-enr <- fetch_enr(2025)
-
-# Statewide total
-enr |>
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") |>
-  select(end_year, n_students)
-
-# Top 5 districts
-enr |>
-  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") |>
-  arrange(desc(n_students)) |>
-  select(district_name, n_students) |>
-  head(5)
-```
-
-## Python Quick Start
-
-```python
-import pywaschooldata as wa
-
-# Fetch 2025 data (2024-25 school year)
-enr = wa.fetch_enr(2025)
-
-# Statewide total
-total = enr[(enr['is_state'] == True) &
-            (enr['subgroup'] == 'total_enrollment') &
-            (enr['grade_level'] == 'TOTAL')]['n_students'].sum()
-print(f"{total:,} students")
-
-# Get multiple years
-enr_multi = wa.fetch_enr_multi([2020, 2021, 2022, 2023, 2024, 2025])
-
-# Check available years
-years = wa.get_available_years()
-print(f"Data available: {years['min_year']}-{years['max_year']}")
-```
-
-## Data Format
-
-`fetch_enr()` returns tidy (long) format by default:
-
-| Column | Description |
-|--------|-------------|
-| `end_year` | School year end (e.g., 2025 for 2024-25) |
-| `district_id` | District organization ID |
-| `campus_id` | School organization ID |
-| `type` | "State", "District", or "Campus" |
-| `district_name`, `campus_name` | Names |
-| `county` | County name |
-| `grade_level` | "TOTAL", "PK", "K", "01"..."12" |
-| `subgroup` | Demographic/population group |
-| `n_students` | Enrollment count |
-| `pct` | Percentage of total |
-
-### Subgroups Available
-
-**Demographics**: `white`, `black`, `hispanic`, `asian`, `pacific_islander`, `native_american`, `multiracial`
-
-**Populations**: `econ_disadv`, `lep`, `special_ed`, `homeless`, `foster_care`, `migrant`, `military_parent`, `highly_capable`
-
-## Data Notes
-
-### Data Source
-
-All data comes directly from the Washington Office of Superintendent of Public Instruction (OSPI) via the [Washington State Report Card](https://washingtonstatereportcard.ospi.k12.wa.us/) and [data.wa.gov](https://data.wa.gov/).
-
-### Data Availability
-
-| Era | Years | Source |
-|-----|-------|--------|
-| Report Card | 2015-2025 | data.wa.gov (full detail) |
-| Student Enrollment | 2010-2014 | data.wa.gov (fewer ID columns) |
-
-**16 years total** across ~2,400 schools and 295 districts.
-
-### Suppression Rules
-
-Washington suppresses student counts where:
-- Counts are less than 10 students (for privacy)
-- Subgroup percentages that could identify individuals
-
-### Census Day
-
-Enrollment data is collected on Census Day (typically the first week of October). This is a snapshot of enrollment at that point in the school year.
-
-### Known Caveats
-
-- The 2010-2014 "Student Enrollment" datasets use slightly different column formats than the 2015+ "Report Card Enrollment" datasets; this package normalizes them to a consistent schema
-- ESD (Educational Service District) information is available for recent years but may be missing for older data (2010-2014)
-- Some district names have changed over time; the package uses current names
-- Charter schools were not legal in Washington until 2012, so charter data begins in 2015
-
-## Part of the State Schooldata Project
-
-This package is part of a larger effort to provide consistent access to state education data across all 50 states. The original package, [njschooldata](https://github.com/almartin82/njschooldata), covers New Jersey and serves as the template for all state packages.
-
-**All 50 state packages:** [github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
-
-## Author
-
-Andy Martin (almartin@gmail.com)
-[github.com/almartin82](https://github.com/almartin82)
-
-## License
-
-MIT
