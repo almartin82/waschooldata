@@ -139,7 +139,7 @@ foster_trend
 | **Enrollment** | 2010-2025 | `fetch_enr()` / `fetch_enr_multi()` | State, district, school. Race, gender, FRPL, SpEd, LEP, foster care, homeless, migrant |
 | Assessments | -- | -- | Not yet available |
 | Graduation | -- | -- | Not yet available |
-| Directory | -- | -- | Not yet available |
+| **Directory** | 2010-2025 | `fetch_directory()` | State, district, school. Address, phone, admin, ESD, county, school type |
 | Per-Pupil Spending | -- | -- | Not yet available |
 | Accountability | -- | -- | Not yet available |
 | Chronic Absence | -- | -- | Not yet available |
