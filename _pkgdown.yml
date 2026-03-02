@@ -16,10 +16,11 @@ navbar:
 
 reference:
 - title: "Fetch Data"
-  desc: "Functions for downloading enrollment data from OSPI"
+  desc: "Functions for downloading enrollment and directory data from OSPI"
   contents:
   - fetch_enr
   - fetch_enr_multi
+  - fetch_directory
   - get_available_years
 
 - title: "Transform Data"
@@ -34,6 +35,7 @@ reference:
   contents:
   - cache_status
   - clear_cache
+  - clear_directory_cache
 
 - title: "Package"
   desc: "Package documentation"
