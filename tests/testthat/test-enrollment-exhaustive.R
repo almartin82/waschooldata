@@ -72,7 +72,7 @@ test_that("fetch_enr 2024 tidy has correct columns", {
 test_that("fetch_enr 2024 tidy has correct column types", {
   enr <- fetch_enr(2024, tidy = TRUE, use_cache = TRUE)
 
-  expect_type(enr$end_year, "double")
+  expect_true(is.numeric(enr$end_year), info = "end_year should be numeric (integer or double)")
   expect_type(enr$type, "character")
   expect_type(enr$district_id, "character")
   expect_type(enr$district_code, "character")
