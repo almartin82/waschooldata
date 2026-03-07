@@ -519,9 +519,12 @@ test_that("get_dataset_id returns correct IDs for all years", {
   expect_equal(get_dataset_id(2011), "93ce-b95t")
   expect_equal(get_dataset_id(2010), "mpef-t92p")
 
+  # 2026 (new year)
+  expect_equal(get_dataset_id(2026), "wvqy-yp3m")
+
   # Out of range
   expect_null(get_dataset_id(2009))
-  expect_null(get_dataset_id(2026))
+  expect_null(get_dataset_id(2027))
   expect_null(get_dataset_id(1999))
 })
 

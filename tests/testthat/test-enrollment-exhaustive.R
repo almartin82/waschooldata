@@ -15,10 +15,10 @@ test_that("get_available_years returns correct year range", {
   years <- get_available_years()
 
   expect_true(is.integer(years) || is.numeric(years))
-  expect_equal(length(years), 16)
+  expect_equal(length(years), 17)
   expect_equal(min(years), 2010)
-  expect_equal(max(years), 2025)
-  expect_equal(years, 2010:2025)
+  expect_equal(max(years), 2026)
+  expect_equal(years, 2010:2026)
 })
 
 test_that("get_available_years returns contiguous sequence", {
@@ -38,7 +38,7 @@ test_that("fetch_enr rejects years before available range", {
 })
 
 test_that("fetch_enr rejects years after available range", {
-  expect_error(fetch_enr(2026, use_cache = TRUE), "end_year must be between")
+  expect_error(fetch_enr(2027, use_cache = TRUE), "end_year must be between")
   expect_error(fetch_enr(2030, use_cache = TRUE), "end_year must be between")
   expect_error(fetch_enr(2050, use_cache = TRUE), "end_year must be between")
 })

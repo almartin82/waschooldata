@@ -7,7 +7,7 @@
 get_dataset_id(end_year)
 }
 \arguments{
-\item{end_year}{School year end (e.g., 2024 for 2023-24 school year)}
+\item{end_year}{School year end (e.g., 2026 for 2025-26 school year)}
 }
 \value{
 Character string with dataset ID, or NULL if not available
@@ -19,7 +19,7 @@ for a given school year end.
 \details{
 Data sources by era:
 \itemize{
-\item 2015-2024: "Report Card Enrollment" datasets
+\item 2015-2026: "Report Card Enrollment" datasets
 \item 2010-2014: "Student Enrollment" datasets (same schema)
 }
 }
